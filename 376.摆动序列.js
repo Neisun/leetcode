@@ -65,35 +65,76 @@
 
 
 // 使用dp数组形式的动态规划
+// var wiggleMaxLength = function(nums) {
+//   const len = nums.length;
+//   const dp = [];
+//   // 构造dp数组
+//   // dp[i][0] 表示当前数即走到第i个数，山峰个数
+//   // dp[i][1] 表示当前数即走到第i个数，山谷个数
+//   for (let i = 0; i < len; i++) {
+//     const col = [0, 0];
+//     dp[i] = col;
+//   }
+
+//   // 初始值 对于一个数，既是山峰也是山谷
+//   dp[0][0] = 1;
+//   dp[0][1] = 1;
+
+//   // 开始遍历
+//   for (let i = 1; i < len; i++) {
+//     dp[i][0] = 1;
+//     dp[i][1] = 1;
+//     for (let j = 0; j < i; j++) {
+//       if (nums[i] > nums[j]) { // 把nums[i]接到num[j]后边当做山峰
+//         dp[i][0] = Math.max(dp[i][0], dp[j][1] + 1);
+//       } else if (nums[i] < nums[j]) { // 当做山谷
+//         dp[i][1] = Math.max(dp[i][1], dp[j][0] + 1);
+//       }
+//     }
+//   }
+  
+//   return Math.max(dp[len - 1][0], dp[len - 1][1]);
+// };
+// 之前的动态规划不知道是怎么写出来的，明显是没有理解dp数组的定义就乱写
 var wiggleMaxLength = function(nums) {
+  // dp[i][0] 表示走到第i个元素时候摆动序列的最大长度，并且当前是山峰
+  // dp[i][1] 表示走到第i个元素时候摆动序列的最大长度，并且当前是山谷
+
+  // 第二步，我们需要推导出状态转移方程
+  // 对于 0 < j < i的元素中
+  // 如果 nums[i] > nums[j] 说明要把nums[i]放在nums[j]的山谷后边当做山峰
+  // 状态转移为 dp[i][0] = max(dp[i][0], dp[j][1] + 1)
+  // 对于 nums[i] < nums[j] 说明把nums[i]放nums[j]的山峰后边当山谷
+  // 状态转移为 dp[i][1] = max(dp[i][1], dp[j][0] + 1)
+  
+
+  // 初始化？对于一个元素，既是山峰也是山谷 dp[0][0] = dp[0][1] = 1;
+  
+  // 动态规划逻辑开始
+  // 先构成dp数组
   const len = nums.length;
   const dp = [];
-  // 构造dp数组
-  // dp[i][0] 表示当前数即走到第i个数，山峰个数
-  // dp[i][1] 表示当前数即走到第i个数，山谷个数
   for (let i = 0; i < len; i++) {
-    const col = [0, 0];
-    dp[i] = col;
+    dp[i] = new Array(2);
   }
-
-  // 初始值 对于一个数，既是山峰也是山谷
+  // 初始化
   dp[0][0] = 1;
   dp[0][1] = 1;
-
-  // 开始遍历
+  
+  // 状态转移方程
   for (let i = 1; i < len; i++) {
     dp[i][0] = 1;
     dp[i][1] = 1;
     for (let j = 0; j < i; j++) {
-      if (nums[i] > nums[j]) { // 把nums[i]接到num[j]后边当做山峰
+      if (nums[i] > nums[j]) { // nums[i]放在nums[j]这个山谷后边当做山峰
         dp[i][0] = Math.max(dp[i][0], dp[j][1] + 1);
-      } else if (nums[i] < nums[j]) { // 当做山谷
+      } else if (nums[i] < nums[j]) { // nums[i]放在nums[j]这个山峰后边当山谷
         dp[i][1] = Math.max(dp[i][1], dp[j][0] + 1);
       }
     }
   }
-  
-  return Math.max(dp[len - 1][0], dp[len - 1][1]);
+
+  return Math.max(dp[len-1][0], dp[len-1][1]);
 };
 // @lc code=end
 

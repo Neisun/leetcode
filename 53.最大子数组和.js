@@ -39,17 +39,17 @@
 // 无论是哪种情况 想把下个数加入到子数组中 都需要判断下个数是不是负数，如果是负数，那么不加了，因为越加越小
 // 贪心的代码没想好怎么写，先放着吧
 // [-100, -1, 3,]
-var maxSubArray = function(nums) {
-  const len = nums.length;
-  let max = -Infinity;
-  let sum = 0;
-  for (let i = 0; i < len; i++) {
-    sum += nums[i];
-    if (sum > max) max = sum;
-    if (sum <= 0) sum = 0;
-  }
-  return max;
-};
+// var maxSubArray = function(nums) {
+//   const len = nums.length;
+//   let max = -Infinity;
+//   let sum = 0;
+//   for (let i = 0; i < len; i++) {
+//     sum += nums[i];
+//     if (sum > max) max = sum;
+//     if (sum <= 0) sum = 0;
+//   }
+//   return max;
+// };
 
 // 我们看一下动态规划的方式
 // var maxSubArray = function(nums) {
@@ -66,5 +66,35 @@ var maxSubArray = function(nums) {
 //   }
 //   return max;
 // };
+
+// 贪心方式-复习
+// var maxSubArray = function(nums) {
+//   let max = -Infinity;
+//   let sum = 0;
+//   for (const num of nums) {
+//     sum += num;
+//     max = Math.max(sum, max);
+//     if (sum <= 0) sum = 0;
+//   }
+//   return max;
+// };
+
+// 动态规划方式复习
+var maxSubArray = function(nums) {
+  const len = nums.length;
+  const dp = [];
+  let max = nums[0];
+  // 状态转移方程
+  // dp[i]表示以第i个数结尾最大连续子序列和 那么这个nums[i]加不加的问题，如果不加,那就是nums[i]，如果加那就是 dp[i-1] + nums[i]
+  // dp[i] = Math.max(dp[i-1], dp[i-1] + nums[i]);
+  dp[0] = nums[0];
+  for (let i = 1; i < len; i++) {
+    dp[i] = Math.max(nums[i], dp[i-1] + nums[i]);
+    max = Math.max(max, dp[i]);
+  }
+  return max;
+};
 // @lc code=end
+const nums = [-2,1,-3,4,-1,2,1,-5,4];
+maxSubArray(nums);
 

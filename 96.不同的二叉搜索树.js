@@ -22,10 +22,12 @@ var numTrees = function(n) {
    */
 
   // 构建dp数组
+  // 记得初始化为0，因为要叠加计算，不然会是NaN
   const dp = new Array(n+1).fill(0);
   
   // 初始化
   dp[0] = 1;
+  dp[1] = 1;
 
   // 状态转移方程
   for (let i = 1; i <= n; i++) {

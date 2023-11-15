@@ -46,39 +46,80 @@ var lastStoneWeightII = function(stones) {
    * 对于dp[i][0] 包的大小为0，那么必然是dp[i][0] = 0;
    */
 
+  // const len = stones.length;
+  // // 求和
+  // const sum = stones.reduce((pre, cur) => pre + cur);
+  // // 分堆
+  // const bagSize = Math.floor(sum/2);
+  // // 构造dp数组
+  // const dp = [];
+  // for (let i = 0; i < len; i++) {
+  //   dp[i] = [];
+  //   for (let j = 0; j <= bagSize; j++) {
+  //     dp[i][j] = 0;
+  //   }
+  // }
+
+  // // 初始化
+  // // dp[i][0]的情况已经在构造dp数组的情况中完成了初始化
+  // // 初始化dp[0][i]的情况就好
+  // for (let i = stones[0]; i <= bagSize; i++) {
+  //   dp[0][i] = stones[0];
+  // }
+
+  // // 开始遍历进行状态转移
+  // for (let i = 1; i < len; i++) { // 遍历石头
+  //   for (let j = 1; j <= bagSize; j++) { // 遍历背包大小
+  //     if (j < stones[i]) {
+  //       dp[i][j] = dp[i-1][j];
+  //     } else {
+  //       dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-stones[i]] + stones[i]);
+  //     }
+  //   }
+  // }
+
+  // return (sum - dp[len-1][bagSize]) - dp[len-1][bagSize];
+
+  /**
+   * 使用一维数组的方式
+   * 在二维数组的方式中，dp[i][j] = dp[i-1][j]，我们可以节省掉这一步
+   * 一维数组的方式可能更简洁，但是略微难以理解
+   * 
+   * dp数组的定义
+   * dp[j]表示容积为j的背包装石头的最大价值为dp[j]
+   * 
+   * 状态转移
+   * 从二维数组直接迁移过来
+   * dp[j] = max(dp[j], dp[j-stone[i]] + stones[i])
+   * 
+   * 初始化
+   * dp[0]背包的容积是0，那么必然是0
+   */
+
   const len = stones.length;
   // 求和
   const sum = stones.reduce((pre, cur) => pre + cur);
   // 分堆
   const bagSize = Math.floor(sum/2);
+
   // 构造dp数组
-  const dp = [];
-  for (let i = 0; i < len; i++) {
-    dp[i] = [];
-    for (let j = 0; j <= bagSize; j++) {
-      dp[i][j] = 0;
+  const dp = new Array(bagSize + 1).fill(0);
+
+  // 初始化 好像不用初始化了，在构造过程中已经完成了初始化
+  
+  // 遍历
+  for (let i = 0; i < len; i++) { // 遍历石头
+    // for (let j = bagSize; j >= 0; j--) { // 遍历背包，需要从后向前哦 从后向前可以避免石头使用两次
+    //   if (j >= stones[i]) {
+    //     dp[j] = Math.max(dp[j], dp[j-stones[i]] + stones[i]);
+    //   }
+    // }
+    for (let j = bagSize; j >= stones[i]; j--) { // 遍历背包，需要从后向前哦 从后向前可以避免石头使用两次
+      dp[j] = Math.max(dp[j], dp[j-stones[i]] + stones[i]);
     }
   }
 
-  // 初始化
-  // dp[i][0]的情况已经在构造dp数组的情况中完成了初始化
-  // 初始化dp[0][i]的情况就好
-  for (let i = stones[0]; i <= bagSize; i++) {
-    dp[0][i] = stones[0];
-  }
-
-  // 开始遍历进行状态转移
-  for (let i = 1; i < len; i++) { // 遍历石头
-    for (let j = 1; j <= bagSize; j++) { // 遍历背包大小
-      if (j < stones[i]) {
-        dp[i][j] = dp[i-1][j];
-      } else {
-        dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-stones[i]] + stones[i]);
-      }
-    }
-  }
-
-  return (sum - dp[len-1][bagSize]) - dp[len-1][bagSize];
+  return (sum-dp[bagSize]) - dp[bagSize];
 };
 // @lc code=end
 

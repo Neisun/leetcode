@@ -109,7 +109,7 @@ var coinChange = function(coins, amount) {
 
   // 遍历
   for (let i = 1; i < len; i++) {
-    for (let j = 1; j <= amount; j++) {
+    for (let j = 0; j <= amount; j++) {
       if (j < coins[i]) {
         dp[i][j] = dp[i-1][j];
       } else {

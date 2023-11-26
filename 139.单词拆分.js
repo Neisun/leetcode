@@ -55,14 +55,13 @@ var wordBreak = function(s, wordDict) {
   for (let i = 1; i <= sl; i++) {
     for (let k = 0; k < i; k++) {
       const str = s.substring(k, i);
-      console.log(str);
       if (dp[k] && wordDict.includes(str)) {
         dp[i] = true;
       }
     }
   }
 
-  console.log(dp);
+  // console.log(dp);
 
   return dp[sl];
 };

@@ -75,7 +75,7 @@ var change = function(amount, coins) {
   // 遍历
   for (let i = 1; i < len; i++) { // 遍历物品
     for (let j = 0; j <= amount; j++) { // 遍历背包容积
-      for (let k = 0; k * coins[i] <= j; k++) {
+      for (let k = 0; k * coins[i] <= j; k++) { // 遍历硬币数量
         dp[i][j] += dp[i-1][j-k*coins[i]];
       }
     }

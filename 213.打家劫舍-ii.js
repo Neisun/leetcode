@@ -53,10 +53,11 @@ var rob = function(nums) {
   // 第二种情况， 包含尾，不包含头
   const result2 = traverse(1, len);
 
-  // 第三种情况，不包含头尾
-  const result3 = traverse(1, len-1);
+  // 第三种情况，不包含头尾，由于第一种情况和第二种情况包含了，将这个情况包含在内了，所以这一步可以节省了
+  // const result3 = traverse(1, len-1);
 
-  return Math.max(result1, result2, result3);
+  // return Math.max(result1, result2, result3);
+  return Math.max(result1, result2);
 };
 // @lc code=end
 

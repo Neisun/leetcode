@@ -72,7 +72,7 @@ var maxProfit = function(prices, fee) {
    * 状态转移
    * 对于dp[i][0]
    * 之前就持有 dp[i-1][0]
-   * 之前不持有 然后买入 dp[i-1][1]-prices[i]-fee
+   * 之前不持有 然后买入 dp[i-1][1]-prices[i]
    * 
    * dp[i][1]
    * 之前就不持有 dp[i-1][1]

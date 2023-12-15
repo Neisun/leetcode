@@ -104,12 +104,12 @@ var countSubstrings = function(s) {
    * 注意注意注意，重要的事情说三遍，由于dp[i][j]是由i+1,j-1推导出来的，所以i得遍历是从到小，j的遍历从小到大哦
    */
 
-  const l = s.length;
+  // const l = s.length;
 
-  // 构造dp
-  const dp = new Array(l).fill(false).map(_ => new Array(l).fill(false));
+  // // 构造dp
+  // const dp = new Array(l).fill(false).map(_ => new Array(l).fill(false));
 
-  let count = 0;
+  // let count = 0;
 
   // 初始化?
   // 单个字符肯定是true 由于其考虑到了一个字符的情况，所以可以不用初始化
@@ -135,30 +135,80 @@ var countSubstrings = function(s) {
   // }
 
   // 上述遍历条件简写
-  for (let i = l-1; i >= 0; i--) { // i从大到小遍历
-    for (let j = i; j < l; j++) { // j从小到大遍历
-      if (s[i] === s[j]) {
-        if (j - i <= 1) {
-          dp[i][j] = true;
-          count++;
-        } else if (dp[i+1][j-1]) {
-          dp[i][j] = true;
-          count++;
-        }
-      }
-    }
-  }
+  // for (let i = l-1; i >= 0; i--) { // i从大到小遍历
+  //   for (let j = i; j < l; j++) { // j从小到大遍历
+  //     if (s[i] === s[j]) {
+  //       if (j - i <= 1) {
+  //         dp[i][j] = true;
+  //         count++;
+  //       } else if (dp[i+1][j-1]) {
+  //         dp[i][j] = true;
+  //         count++;
+  //       }
+  //     }
+  //   }
+  // }
   
 
-  console.log(count);
+  // console.log(count);
 
-  console.log(dp);
+  // console.log(dp);
+
+  // return count;
+
+  /**
+   * 双指针方式
+   * 确定中心点，分别向两边移动
+   * 遇到 s[i] === s[j] 说明[i,j]（包含i，j）区间内的字符串是回文串，计数+1,然后分别向两边移动
+   * 
+   * 只不过我没有想到的点，我只考虑到以一个字符当中心点，没考虑到以两个字符当中心点的情况
+   * 至于如果是3个、或者4个或者更多的点当中心点都是 以1或者2个当中心点的变形
+   * 
+   * 写到这个时候，我有点明白为什么要考虑这两种情况了，因为回文串可以是奇数或者偶数的
+   * 举例子来看 abba
+   * 以1位中心点考虑，可以得到 a b b a
+   * 以2为中心点考虑，可以得到 bb abba
+   * 所以 对于abba，回文子串的个数是 以1位中心点 + 以2位中心点的和
+   * 
+   * 会不会出现以1位中心点 和 以2位中心点出现重复的情况呢
+   * 看一个稍微极端的例子
+   * aaaa
+   * 以1位中心点，可以得到 a1 a2 a1a2a3 a3 a2a3a4 a4
+   * 以2位中心点，可以得到 a1a2 a2a3 a1a2a3a4 a3a4
+   * 没有重复的情况出现
+   */
+  const len = s.length;
+  let count = 0;
+
+  // 以1位为中心点(回文串是奇数的情况)
+  for (let i = 0; i < len; i++) {
+    let j = i; // 左指针
+    let k = i; // 右指针
+    while (j >= 0 && k < len && s[j] === s[k]) {
+      j--;
+      k++;
+      count++;
+    }
+  }
+
+  // 以2位为中心点(回文串是偶数的情况)
+  for (let i = 0; i < len; i++) {
+    let j = i;
+    let k = i + 1;
+    while (j >= 0 && k < len && s[j] === s[k]) {
+      j--;
+      k++;
+      count++;
+    }
+  }
+
+  // console.log(count);
 
   return count;
 };
 // @lc code=end
 
 // const s = 'abc';
-const s = 'aaa';
+const s = 'aaaa';
 
 countSubstrings(s);

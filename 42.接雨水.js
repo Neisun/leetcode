@@ -125,25 +125,29 @@ var trap = function(height) {
 
   /**
    * 单调栈方式
-   * 放弃了，很难理解
    */
   const len = height.length;
-  const stack = [0];
+  const stack = []
   let sum = 0;
-  
-  // 遍历
-  for (let i = 1; i < len - 1; i++) {
+  for (let i = 0; i < len; i++) {
     while (stack.length && height[i] > height[stack[stack.length-1]]) {
-      const index = stack.pop();
-      const midH = height[index];
-      const rH = height[i];
-      const lH = height[stack[stack.length-1]];
-      sum += Math.min(lH,rH) - midH;
+      // 中间元素
+      const mid = stack.pop();
+      // 不能形成凹槽
+      if (!stack.length) break;
+      // 凹槽宽度
+      const w = i - stack[stack.length-1] - 1;
+      // 凹槽高度
+      const h = Math.min(height[stack[stack.length-1]], height[i]) - height[mid];
+      // 计算面积
+      sum += w*h;
     }
     stack.push(i);
   }
 
-  console.log(sum);
+  // console.log(sum);
+
+  return sum;
 };
 // @lc code=end
 

@@ -62,15 +62,45 @@ var largestRectangleArea = function(heights) {
    * 先试一下暴力解法,
    * 暴力解法超时了
    */
-  let max = 0;
+  // let max = 0;
+  // const len = heights.length;
+  // for (let i = 0; i < len; i++) {
+  //   for (let j = i; j < len; j++) {
+  //     const h = Math.min(...heights.slice(i,j+1))
+  //     // console.log(`${i}-${j}`, min);
+  //     const w = j - i + 1;
+  //     max = Math.max(max, w * h);
+  //   }
+  // }
+
+  // console.log(max);
+
+  // return max;
+
+  /**
+   * 单调栈的方式
+   * 这是一个从栈顶到栈底的依次递增的栈
+   * 与接雨水问题极为类似的，接雨水是找凹槽 即 大小大
+   * 这是相反的 这是找 小大小即 左右两边第一个小的元素
+   */
+  // 首尾各插入一个0，来防止特殊情况如[2,4]这种
+  heights.push(0);
+  heights.unshift(0);
   const len = heights.length;
-  for (let i = 0; i < len; i++) {
-    for (let j = i; j < len; j++) {
-      const h = Math.min(...heights.slice(i,j+1))
-      // console.log(`${i}-${j}`, min);
-      const w = j - i + 1;
-      max = Math.max(max, w * h);
+  const st = [0];
+  let max = 0;
+  for (let i = 1; i < len; i++) {
+    while (st.length && heights[i] < heights[st[st.length-1]]) {
+      const mid = st.pop();
+      if (st.length) {
+        const left = st[st.length-1];
+        const right = i;
+        const w = right - left - 1;
+        const h = heights[mid];
+        max = Math.max(max, w * h);
+      }
     }
+    st.push(i);
   }
 
   console.log(max);
@@ -78,6 +108,7 @@ var largestRectangleArea = function(heights) {
   return max;
 };
 // @lc code=end
-const heights = [2,1,5,6,2,3];
+// const heights = [2,1,5,6,2,3];
+const heights = [2,4];
 largestRectangleArea(heights);
 

@@ -69,30 +69,78 @@
  * @return {boolean}
  */
 var validPath = function(n, edges, source, destination) {
-  // 由于是双向图，所以构造一下数据结构，这种数据结构什么样呢？
-  // 是这样的 对于[0,1]的节点，表示 0<->1 所以我们使用一个二维数组 [[]] 以如下的方式构造
-  const adj = new Array(n).fill().map(_ => new Array());
-  for (const [x, y] of edges) {
-    adj[x].push(y);
-    adj[y].push(x);
-  }
+  // // 由于是双向图，所以构造一下数据结构，这种数据结构什么样呢？
+  // // 是这样的 对于[0,1]的节点，表示 0<->1 所以我们使用一个二维数组 [[]] 以如下的方式构造
+  // const adj = new Array(n).fill().map(_ => new Array());
+  // for (const [x, y] of edges) {
+  //   adj[x].push(y);
+  //   adj[y].push(x);
+  // }
 
-  const visited = new Array(n).fill(false);
+  // const visited = new Array(n).fill(false);
 
-  const dfs = (source, destination, adj, visited) => {
-    if (source === destination) return true;
-    visited[source] = true;
-    for (const nextSource of adj[source]) {
-      if (!visited[nextSource] && dfs(nextSource, destination, adj, visited)) return true
+  // const dfs = (source, destination, adj, visited) => {
+  //   if (source === destination) return true;
+  //   visited[source] = true;
+  //   for (const nextSource of adj[source]) {
+  //     if (!visited[nextSource] && dfs(nextSource, destination, adj, visited)) return true
+  //   }
+  //   return false;
+  // }
+  // return dfs(source, destination, adj, visited);
+
+  /**
+   * ?? 使用并查集的方式
+   * 并查集解决了什么问题，主要解决联通性问题，即从过子节点找祖先节点，看是否有共同的祖先
+   * 1. 创建集合，一般来说是是一个数组
+   * 2. 初始化集合
+   * 3. 连接边，即加入集合
+   * 4. 找祖先元素
+   */
+  if (source === destination) return true;
+  // 1. 创建集合
+  const nodeList = new Array(n);
+
+
+  const init = (n) => {
+    // 初始化
+    for (let i = 0; i < n; i++) {
+      nodeList[i] = i;
     }
-    return false;
   }
-  return dfs(source, destination, adj, visited);
 
-  // ?? TODO 理解并使用并查集的方式
+  // 找祖先
+  const find = (x) => {
+    // 自身本身就是根
+    if (nodeList[x] === x) return x;
+    // 否则递归调用，持续往下找
+    return find(nodeList[x]);
+  }
+
+  // 连接节点
+  const connect = (x, y) => {
+    const parentX = find(x);
+    const parentY = find(y)
+    if (parentX !== parentY) {
+      nodeList[parentX] = parentY;
+    }
+  }
+
+  // 2. 初始化
+  init(n);
+  // 3. 根据题目中给出的条件，连接节点
+  for (const [x, y] of edges) {
+    connect(x, y);
+  }
+  // console.log(nodeList);
+  // 4. 根据给出的 source 和 destination来分别找祖先，看祖先是否相等
+  return find(source) === find(destination);
 };
 // @lc code=end
 
-const n = 3, edges = [[0,1],[1,2],[2,0]], source = 0, destination = 2;
-validPath(n, edges, source, destination);
+// const n = 3, edges = [[0,1],[1,2],[2,0]], source = 0, destination = 2;
+// const n = 6, edges = [[0,1],[0,2],[3,5],[5,4],[4,3]], source = 0, destination = 5
+const n = 10, edges = [[0,7],[0,8],[6,1],[2,0],[0,4],[5,8],[4,7],[1,3],[3,5],[6,5]], source = 7, destination = 5;
+const r = validPath(n, edges, source, destination);
+console.log(r)
 

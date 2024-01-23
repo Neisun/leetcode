@@ -59,17 +59,31 @@
 //   return result;
 // };
 
-// 贪心回顾
+// // 贪心回顾
+// var maxProfit = function(prices) {
+//   // 对于数组 [1,2,3,4] 1天买，4天卖，prices[3] - prices[0]
+//   // 等同于 prices[1]-prices[0] + prices[2]-prices[1] + prices[3]-prices[2]
+//   // 只要后一天比前一天大，就可以卖，叠加起来就是结果
+//   let result = 0;
+//   for (let i = 0; i < prices.length - 1; i++) {
+//     let diff = prices[i+1] - prices[i];
+//     if (diff > 0) result += diff;
+//   }
+//   return result;
+// };
+
+// 2024-01-22刷题刷到的，那么再来回顾一下
 var maxProfit = function(prices) {
-  // 对于数组 [1,2,3,4] 1天买，4天卖，prices[3] - prices[0]
-  // 等同于 prices[1]-prices[0] + prices[2]-prices[1] + prices[3]-prices[2]
-  // 只要后一天比前一天大，就可以卖，叠加起来就是结果
-  let result = 0;
+  /**
+   * 我们只需要对比前后两天，如果发现这个差值大于0，那么我们就加入计算
+   * 否则不计算
+   */
+  let max = 0;
   for (let i = 0; i < prices.length - 1; i++) {
-    let diff = prices[i+1] - prices[i];
-    if (diff > 0) result += diff;
+    const dif = prices[i+1] - prices[i];
+    if (dif > 0) max += dif;
   }
-  return result;
+  return max;
 };
 // @lc code=end
 

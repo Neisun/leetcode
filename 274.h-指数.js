@@ -85,25 +85,48 @@ var hIndex = function(citations) {
    */
   // 创建一个数组统计次数
   // [100, 1, 2, 2, 3, 4, 5]
+  // const n = citations.length;
+  // // counter[i] 表示引用次数为i的论文的数量
+  // const counter = new Array(n+1).fill(0);
+  // for (let i = 0; i < n; i++) {
+  //   if (citations[i] >= n) {
+  //     counter[n]++;
+  //   } else {
+  //     counter[citations[i]]++;
+  //   }
+  // }
+  // // console.log(counter);
+  // let total = 0;
+  // for (let i = n; i >= 0; i--) {
+  //   total += counter[i];
+  //   if (total >= i) {
+  //     return i;
+  //   }
+  // }
+  // return 0;
+
+  /**
+   * 总体分析一下这个题，这个题题意是有点难懂
+   * 3 0 6 1 5
+   * 可以排个序，从大到小
+   * 6 5 3 1 0
+   * 假设现在的h是1 那就说至少有一个citations[i]比1大，存在
+   * 假设现在的h是2 说明至少有两个citations[i]比2大 存在
+   * 假设现在的h是3 说明至少有三个citations[i]比3大 存在
+   * 假设现在的h是4 说明至少有四个citations[i]比4大 不存在 返回3
+   * 思路大概就是这样的
+   */
   const n = citations.length;
-  // counter[i] 表示引用次数为i的论文的数量
-  const counter = new Array(n+1).fill(0);
+  // 排序
+  citations.sort((a, b) => b - a);
+  // [3,1,1]
+  let h = 0;
   for (let i = 0; i < n; i++) {
-    if (citations[i] >= n) {
-      counter[n]++;
-    } else {
-      counter[citations[i]]++;
+    if (i+1 <= citations[i]) {
+      h = i+1;
     }
   }
-  // console.log(counter);
-  let total = 0;
-  for (let i = n; i >= 0; i--) {
-    total += counter[i];
-    if (total >= i) {
-      return i;
-    }
-  }
-  returnm0;
+  return h;
 };
 // @lc code=end
 

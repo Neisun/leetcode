@@ -72,19 +72,19 @@ var isSubsequence = function(s, t) {
    * 如果到最后 i >= s.length，证明s是t的子序列
    */
   
-  let i = 0;
-  let j = 0;
+  // let i = 0;
+  // let j = 0;
 
-  while (j < t.length) {
-    if (s[i] === t[j]) {
-      i++;
-    }
-    j++;
-  }
+  // while (j < t.length) {
+  //   if (s[i] === t[j]) {
+  //     i++;
+  //   }
+  //   j++;
+  // }
 
-  // console.log(i);
+  // // console.log(i);
 
-  return i >= s.length;
+  // return i >= s.length;
 
   /**
    * 动态规划方式
@@ -132,6 +132,45 @@ var isSubsequence = function(s, t) {
   // // console.log(dp);
 
   // return dp[len1-1][len2-1] === len1;
+
+
+  // 2024-02-05 复习
+  /**
+   * 使用双指针的方式
+   */
+  // let sidx = 0;
+  // let tidx = 0;
+  // while (tidx < t.length) {
+  //   if (s[sidx] === t[tidx]) { // 找到相同的
+  //     sidx++;
+  //   }
+  //   tidx++;
+  // }
+  // return sidx === s.length;
+
+  /**
+   * 动态规划的方式
+   * dp[i][j]表示s中以i-1结尾，t中以j-1结尾的相同子序列的长度
+   */
+  const sl = s.length;
+  const tl = t.length;
+  const dp = new Array(sl+1).fill().map(_ => new Array(tl+1).fill(0));
+
+  // 初始化
+  
+
+  // 遍历
+  for (let i = 1; i <= sl; i++) {
+    for (let j = 1; j <= tl; j++) {
+      if (s[i-1] === t[j-1]) {
+        dp[i][j] = dp[i-1][j-1] + 1;
+      } else {
+        dp[i][j] = dp[i][j-1]
+      }
+    }
+  }
+
+  return dp[sl][tl] >= sl;
 };
 // @lc code=end
 
@@ -139,4 +178,5 @@ const s = "abc", t = "ahbgdc"
 // const s = "axc", t = "ahbgdc"
 // const s = "bb", t = "ahbgdc"
 
-isSubsequence(s,t);
+const r = isSubsequence(s,t);
+console.log(r)

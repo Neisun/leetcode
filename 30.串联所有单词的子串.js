@@ -82,7 +82,131 @@ var findSubstring = function(s, words) {
    * words中的项目全排列，连成的字符串，在s中出现的起始位置
    * 如果以暴力的方式求解，那么时间复杂度会非常高
    * 暂时放在这，有点懒得想
+   * 先用暴力的方式求一下
+   * TODO: 慢慢想吧，不是很好想的一个题
+   * 看了一下题解，大概写一下
    */
+  // 本质上还是滑动窗口
+  // 特殊情况处理
+  // if (words.length === 0) return [];
+  // // 字符串长度
+  // const sl = s.length;
+  // // 单个单词的长度
+  // const wordLen = words[0].length;
+  // // words中形成字符串的总长度
+  // const totalLen = wordLen * words.length;
+  // // 结果集
+  // const result = [];
+
+  // // 统计一下words中每个单词出现的次数，使用map记录
+  // const wordMap = new Map();
+  // for (const word of words) {
+  //   // 写的稍微复杂点，但是可读性好
+  //   if (wordMap.has(word)) {
+  //     wordMap.set(word, wordMap.get(word) + 1);
+  //   } else {
+  //     wordMap.set(word, 1);
+  //   }
+  //   // 简便写法，易读性差点
+  //   // wordMap.set(word, (wordMap.get(word) || 0) + 1);
+  // }
+
+  // // 遍历s，以每一个字符为起点，开始找
+  // // 为了把字符串划分为 0 wordLen 2wordLen 3wordLen ...
+  // // 1 wordLen+1 2wordLen+1 3wordLen+1 ...
+  // for (let i = 0; i <= sl - totalLen; i++) {
+  //   // 用来存储以i为起点，截取的word的出现的次数的map映射
+  //   const tempMap = new Map();
+  //   let count = 0;
+  //   while (count < words.length) {
+  //     // 截取起点
+  //     const start = i + count * wordLen;
+  //     // 截取终点
+  //     const end = start + wordLen;
+  //     // 截取出单词
+  //     const word = s.substring(start, end);
+  //     // 这块巧妙在不去操作原map即wordMap，而是每次构造新的map来进行匹配
+  //     // 如果单词没在words出现
+  //     if (!wordMap.has(word)) {
+  //       // 退出
+  //       break;
+  //     } else {
+  //       // 当前的子串
+  //       tempMap.set(word, (tempMap.get(word) || 0) + 1);
+  //       if (tempMap.get(word) > wordMap.get(word)) { // 多了
+  //         break;
+  //       }
+  //     }
+  //     count++;
+  //   }
+  //   if (count === words.length) {
+  //     result.push(i);
+  //   }
+  // }
+  // return result;
+
+
+  /**
+   * 另一种方式，使用滑动窗口的方式
+   * 在反复观看题解 https://blog.lichangao.com/daily_practice/leetcode/string/sliding_window.html#_0030-%E4%B8%B2%E8%81%94%E6%89%80%E6%9C%89%E5%8D%95%E8%AF%8D%E7%9A%84%E5%AD%90%E4%B8%B2
+   * 大概明白了
+   * 有一个巧妙的点，就是怎么将s拆分成单词，常规做法是枚举每一个字符，其实不用，只需要枚举单个单词长度就可以,其他都是倍数关系
+   */
+  // 处理特殊情况
+  if (words.length === 0) return [];
+  // 单个单词长度
+  const wordLen = words[0].length;
+  // 单词个数
+  const wordSize = words.length;
+  // words中单词构成字符串的总长度
+  const totalLen = wordLen * wordSize;
+  // 目标字符串的总长度
+  const sLen = s.length;
+  // 结果集
+  const result = [];
+
+  // 记录words中每个单词出现的个数
+  const wordMap = new Map();
+  for (const word of words) {
+    wordMap.set(word, (wordMap.get(word) || 0) + 1);
+  }
+
+  // 遍历
+  for (let i = 0; i < wordLen; i++) {
+    const window = new Map();
+    let count = 0;
+    // 遍历s 以j为起点
+    for (let j = i; j + wordLen <= sLen; j += wordLen) {
+      // 达到预期长度
+      if (j >= totalLen + i) {
+        // 取出头部的单词
+        const word = s.substring(j - totalLen, j - totalLen + wordLen);
+        // 窗口中去掉头部单词
+        window.set(word, window.get(word)-1);
+        if (window.get(word) < wordMap.get(word)) {
+          count--;
+        }
+      }
+      // 在没有达到预期长度之前，都是不断加入到窗口中
+      // 截取出单词
+      const word = s.substring(j, j + wordLen);
+      window.set(word, (window.get(word) || 0) + 1);
+      if (window.get(word) <= wordMap.get(word)) {
+        count++;
+      }
+
+      if (count === wordSize) {
+        result.push(j - (wordSize-1)*wordLen)
+      }
+    }
+  }
+  return result;
 };
 // @lc code=end
+
+// const s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"];
+const s = "barfoothefoobarman", words = ["foo","bar"];
+// const s = "barfoofoobarthefoobarman", words = ["bar","foo","the"];
+// const s = "lingmindraboofooowingdingbarrwingmonkeypoundcake", words = ["fooo","barr","wing","ding","wing"];
+findSubstring(s, words);
 

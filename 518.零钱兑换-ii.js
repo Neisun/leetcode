@@ -60,30 +60,44 @@ var change = function(amount, coins) {
    * dp[i][j] += dp[i-1][j-w[i]];
    */
 
-  const len = coins.length;
-  // 构造dp数组
-  const dp = new Array(len).fill(0).map(_ => new Array(amount+1).fill(0));
+  // const len = coins.length;
+  // // 构造dp数组
+  // const dp = new Array(len).fill(0).map(_ => new Array(amount+1).fill(0));
 
-  // dp[0][i]
-  // dp[i][0] = 0 已经初始化了
-  for (let i = 0; i <= amount; i++) {
-    if (i % coins[0] === 0) {
-      dp[0][i] = 1;
-    }
-  }
+  // // dp[0][i]
+  // // dp[i][0] = 0 已经初始化了
+  // for (let i = 0; i <= amount; i++) {
+  //   if (i % coins[0] === 0) {
+  //     dp[0][i] = 1;
+  //   }
+  // }
 
-  // 遍历
-  for (let i = 1; i < len; i++) { // 遍历物品
-    for (let j = 0; j <= amount; j++) { // 遍历背包容积
-      for (let k = 0; k * coins[i] <= j; k++) { // 遍历硬币数量
-        dp[i][j] += dp[i-1][j-k*coins[i]];
-      }
-    }
-  }
+  // // 遍历
+  // for (let i = 1; i < len; i++) { // 遍历物品
+  //   for (let j = 0; j <= amount; j++) { // 遍历背包容积
+  //     for (let k = 0; k * coins[i] <= j; k++) { // 遍历硬币数量
+  //       dp[i][j] += dp[i-1][j-k*coins[i]];
+  //     }
+  //   }
+  // }
 
-  console.log(dp)
+  // console.log(dp)
 
-  return dp[len-1][amount];
+  // return dp[len-1][amount];
+
+
+/**
+ * 2024-03-25
+ * 每日一题刷到了
+ * 正好复习一下
+ * 使用二维数组的动态规划方式
+ * dp[i][j] 表示从[0,i]区间内选出硬币满足金额是j的组合数
+ * 
+ * 状态推导？
+ * dp[i][j] = 
+ * 
+ * 初始化？
+ */
 };
 // @lc code=end
 const amount = 5, coins = [1, 2, 5]

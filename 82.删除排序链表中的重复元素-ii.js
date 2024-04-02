@@ -57,10 +57,37 @@
  */
 var deleteDuplicates = function(head) {
   /**
-   * 这个题，方法挺多的，我首先想到的是栈
+   * 这个题，方法挺多的
+   * 第一种方式使用hash方式统计次数
    */
-  if (!head) return null;
-  const stack = [];
+  // 统计次数
+  const map = new Map();
+  let cur = head;
+  while (cur) {
+    map.set(cur.val, (map.get(cur.val) || 0) + 1);
+    cur = cur.next;
+  }
+
+  // 再次遍历
+  let dummy_node = new ListNode();
+  let ans = dummy_node;
+  cur = head;
+  while (cur) {
+    if (map.get(cur.val) === 1) {
+      const node = new ListNode();
+      node.val = cur.val;
+      dummy_node.next = node;
+      dummy_node = dummy_node.next;
+    }
+    cur = cur.next;
+  }
+
+  return ans.next;
+
+  /**
+   * 可以使用指针的方式
+   * 思考一下怎么做比较好
+   */
 };
 // @lc code=end
 

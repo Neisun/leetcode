@@ -73,7 +73,9 @@
  * @param {number} capacity
  */
 var LRUCache = function(capacity) {
-
+  this.capacity = capacity;
+  this.map = new Map();
+  // 需要一个数据结构，知道最少使用的是哪个
 };
 
 /** 
@@ -81,7 +83,8 @@ var LRUCache = function(capacity) {
  * @return {number}
  */
 LRUCache.prototype.get = function(key) {
-
+  if (this.map.has(key)) return this.map.get(key);
+  return -1;
 };
 
 /** 
@@ -90,7 +93,11 @@ LRUCache.prototype.get = function(key) {
  * @return {void}
  */
 LRUCache.prototype.put = function(key, value) {
-
+  // 需要删除操作
+  if (this.map.size > this.capacity) {
+    
+  }
+  this.map.set(key, value);
 };
 
 /**
@@ -100,4 +107,12 @@ LRUCache.prototype.put = function(key, value) {
  * obj.put(key,value)
  */
 // @lc code=end
+// put 1
+// 最少使用（从小到大）: 1
+// put 2
+// 最少使用: 1 2
+// get 1，1被使用了
+// 最少使用: 2 1
+// put 3
+// 最少使用: 2 3 其中1被拿掉了
 

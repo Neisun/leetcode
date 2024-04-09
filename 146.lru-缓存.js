@@ -70,49 +70,10 @@
 
 // @lc code=start
 /**
- * 整体思路
- * 双向链表
- * 头结点 head
- * 尾节点 tail
- * 1. 首尾节点相联 
- * head.prev = tail
- * head.next = tail
- * tail.prev = head
- * tail.next = head
- * 
- * 2. 添加节点到头部 假设该节点是x
- * head <-> x <-> x1
- * x.prev = head
- * x.next = head.next
- * x.prev.next = x
- * x.next.prev = x
- * 
- * 3. 删除尾节点 假设删除的节点是x
- * x1 <-> x <-> tail
- * x.prev.next = tail
- * tail.prev = x.prev
- */
-
-class LinkNode {
-  constructor(val, prev, next) {
-    this.val = val;
-    this.prev = prev;
-    this.next = next;
-  }
-}
-
-/**
  * @param {number} capacity
  */
 var LRUCache = function(capacity) {
-  this.capacity = capacity;
-  this.nodeMap = new Map();
-  this.head = new LinkNode();
-  this.tail = new LinkNode();
-  this.head.next = this.tail;
-  this.head.prev = this.tail;
-  this.tail.next = this.head;
-  this.tail.prev = this.head;
+
 };
 
 /** 
@@ -120,13 +81,7 @@ var LRUCache = function(capacity) {
  * @return {number}
  */
 LRUCache.prototype.get = function(key) {
-  // 节点不存在
-  if (!this.nodeMap.has(key)) return -1;
-  // 节点存在
-  // 需要把节点移动到头部
-  const node = this.nodeMap.get(key);
-  this.moveToHead(node);
-  return node.val;
+
 };
 
 /** 
@@ -135,41 +90,8 @@ LRUCache.prototype.get = function(key) {
  * @return {void}
  */
 LRUCache.prototype.put = function(key, value) {
-  let node = null;
-  // 节点不存在
-  if (!this.nodeMap.has(key)) {
-    // 创建节点
-    node = new LinkNode(value);
-  } else {
-    // 得到旧节点
-    node = this.nodeMap.get(key);
-    // 更新节点值
-    node.val = value;
-  }
-  // 节点移动到头部
-  this.moveToHead(node);
-  // 更新节点
-  this.nodeMap.set(key, node);
-  // 判断是否超过容积
-  if (this.nodeMap.size > this.capacity) {
-    // 删除节点
-    this.nodeMap.delete(this.tail.prev.val);
-    this.removeTail(this.tail.prev);
-  }
+
 };
-
-LRUCache.prototype.moveToHead = function (x) {
-  x.prev = this.head;
-  x.next = this.head.next;
-  x.next.prev = x;
-  x.prev.next = x;
-}
-
-LRUCache.prototype.removeTail = function (x) {
-  x.prev.next = this.tail;
-  this.tail.prev = x.prev;
-}
-
 
 /**
  * Your LRUCache object will be instantiated and called as such:

@@ -78,7 +78,15 @@
  * @return {number}
  */
 var sumNumbers = function(root) {
-
+  const sum = (root, total) => {
+    if (!root) return 0;
+    const _total = total * 10 + root.val
+    if (!root.left && !root.right) return _total;
+    const left = sum(root.left, _total);
+    const right = sum(root.right, _total);
+    return left + right;
+  }
+  return sum(root, 0);
 };
 // @lc code=end
 

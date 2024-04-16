@@ -18,24 +18,21 @@
  * @return {number}
  */
 var getMinimumDifference = function(root) {
-  // 结果
   let result = Infinity;
-  // 记录前一个节点值
-  let pre = null;
-  // 深度搜索
-  const dfs = root => {
+  let pre = -1;
+  // 中序遍历
+  const inorder = (root) => {
     if (!root) return;
-    dfs(root.left);
-    // 当前层逻辑，找到最小值
-    if (pre) {
-      result = Math.min(result, Math.abs(root.val - pre.val));
+    inorder(root.left);
+    if (pre === -1) {
+      pre = root.val;
+    } else {
+      result = Math.min(result, root.val - pre);
+      pre = root.val;
     }
-    // 记录前一个遍历的节点
-    pre = root;
-    dfs(root.right);
-    return;
+    inorder(root.right);
   }
-  dfs(root);
+  inorder(root);
   return result;
 };
 // @lc code=end

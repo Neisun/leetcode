@@ -28,18 +28,43 @@
 // 第一种方式，中序遍历，并且记录前个节点
 // 记录前个节点的方式会非常常用在后续的学习中
 var isValidBST = function(root) {
+  // let pre = null;
+  // const dfs = root => {
+  //   if (!root) return true;
+  //   const left = dfs(root.left);
+  //   if (pre && pre.val >= root.val) {
+  //     return false;
+  //   }
+  //   pre = root;
+  //   const right = dfs(root.right);
+  //   return left && right;
+  // }
+  // return dfs(root);
+
+
+
+
+
+
+
+
+
+
+
+  // 使用中序遍历，比较 前一个节点与后一个节点
+  // 如果出现 前一个节点 >= 后一个节点 直接return false
   let pre = null;
-  const dfs = root => {
+  const inorder = (root) => {
     if (!root) return true;
-    const left = dfs(root.left);
-    if (pre && pre.val >= root.val) {
-      return false;
-    }
-    pre = root;
-    const right = dfs(root.right);
+    const left = inorder(root.left);
+    // 是否继续往下走，取决于left的是否为true
+    if (left && pre !== null && pre >= root.val) return false;
+    pre = root.val;
+    const right = inorder(root.right);
     return left && right;
   }
-  return dfs(root);
+
+  return inorder(root);
 };
 
 // 第二种方式，先进行一次中序遍历，将节点值存储到数组，再遍历数组，看是否依次递增

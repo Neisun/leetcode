@@ -84,7 +84,68 @@
  * @return {number[]}
  */
 var calcEquation = function(equations, values, queries) {
+  /**
+   * 这个题挺费劲，很难想
+   * 1. 根据给出的equations构造图，图使用什么数据结构、这是一个什么图？
+   * 有向图，图使用map数据结构，key为每个节点，值为[下个节点，对应的值]
+   * 2. 根据给出的queries中[start, end]来递归的从构造的图中寻找答案
+   */
 
+  // 记录结果
+  const result = [];
+
+  // 1. 构造图
+  const buildGraph = (equations, values) => {
+    const graph = new Map();
+    const len = equations.length;
+    // 构造图
+    for (let i = 0; i < len; i++) {
+      const [a, b] = equations[i];
+      const val = values[i];
+      if (!graph.has(a)) graph.set(a, []);
+      if (!graph.has(b)) graph.set(b, []);
+      graph.get(a).push([b, val]);
+      graph.get(b).push([a, 1/val]);
+    }
+
+    return graph;
+  }
+
+  const graph = buildGraph(equations, values);
+
+
+  // 深度搜索
+  /**
+   * 
+   * @param {string} start 起始点
+   * @param {string} end 终止点
+   * @param {Set} visited 记录是否访问过，避免走入死循环
+   * @param {number} result 结果
+   * @param {Map} graph 图
+   */
+  const dfs = (start, end, visited, result, graph) => {
+    // 如果该点不存在，返回-1
+    if (!graph.has(start)) return -1;
+    if (start === end) return result;
+    visited.add(start);
+    for (const [next, val] of graph.get(start)) {
+      if (!visited.has(next)) {
+        const r = dfs(next, end, visited, result * val, graph);
+        if (r !== -1) return r;
+      }
+    }
+    return -1;
+  }
+
+
+  // 2. 遍历queries，根据起点和终点，寻找答案
+  for (const [start, end] of queries) {
+    const val = dfs(start, end, new Set(), 1, graph);
+    result.push(val);
+  }
+
+
+  return result;
 };
 // @lc code=end
 

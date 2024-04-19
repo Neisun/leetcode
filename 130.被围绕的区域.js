@@ -56,128 +56,202 @@
  * @param {character[][]} board
  * @return {void} Do not return anything, modify board in-place instead.
  */
+// var solve = function(board) {
+//   // 以下是错误思路，这个题的描述太差，果然是写代码的，表述能力都堪忧
+//   // 获取行与列
+//   // const m = board.length;
+//   // const n = board[0].length;
+//   // // 四个方向 上下左右 [x,y]
+//   // const directions = [[0,-1],[0,1],[-1,0],[1,0]];
+
+//   // // dfs
+//   // const dfs = (x, y) => {
+//   //   for (const [dx, dy] of directions) {
+//   //     // 下个节点的坐标
+//   //     const nextX = x + dx;
+//   //     const nextY = y + dy;
+//   //     // console.log(nextX, nextY);
+//   //     // 越界处理
+//   //     if (nextX < 0 || nextX >= m || nextY < 0 || nextY >= n) continue;
+//   //     // 非O处理
+//   //     if (board[nextX][nextX] === "X") continue;
+//   //     // 在边界上的O不处理
+//   //     if (nextX === 0 || nextX === m-1 || nextY === 0 || nextY === n-1) continue;
+//   //     // 其他情况
+//   //     board[nextX][nextY] = "X";
+//   //     dfs(nextX, nextY);
+//   //   }
+//   // }
+
+//   // // 遍历
+//   // for (let x = 1; x < m-1; x++) {
+//   //   for (let y = 1; y < n-1; y++) {
+//   //     if (board[x][y] === "O") {
+//   //       board[x][y] = "X";
+//   //       dfs(x, y);
+//   //     }
+//   //   }
+//   // }
+
+//   // 题目描述
+//   // 到底要把哪些O改成X，就是完全被X包围的O，如果顺着这个O可以找到边界，那么就不能改
+//   /**
+//    * 思路:
+//    * 1. 从边界出发，找是O的点，以O为起点走起来，遇到O打上特殊标记
+//    * 2. 这时候，所有从边界出发的O都变成了特殊标记（比如标记叫A）
+//    * 3. 我们再遍历一下地图，如果再遇到O（这个O肯定是内部的O）就变成X，遇到A变成O
+//    * 结束，这时候就是我们想要的结果
+//    */
+
+//   // 获取行与列
+//   const m = board.length;
+//   const n = board[0].length;
+//   // 四个方向 上下左右 [x,y]
+//   const directions = [[0,-1],[0,1],[-1,0],[1,0]];
+
+//   // dfs
+//   const dfs = (x,y) => {
+//     board[x][y] = "A";
+//     for (const [dx, dy] of directions) {
+//       // 下个节点的坐标
+//       const nextX = x + dx;
+//       const nextY = y + dy;
+//       // 越界处理
+//       if (nextX < 0 || nextX >= m || nextY < 0 || nextY >= n) continue;
+//       // 非O处理
+//       if (board[nextX][nextY] !== "O") continue;
+//       // 其他符合条件的情况
+//       // board[nextX][nextY] = "A";
+//       dfs(nextX, nextY);
+//     }
+//   }
+
+//   // 四个边界
+//   // 上下左右
+//   // 上下可以写在一起
+//   for (let y = 0; y < n; y++) {
+//     // 上边界
+//     if (board[0][y] === "O") {
+//       dfs(0, y);
+//     }
+//     // 下边界
+//     if (board[m-1][y] === "O") {
+//       dfs(m-1, y);
+//     }
+//   }
+
+//   // 左右边界
+//   for (x = 0; x < m; x++) {
+//     if (board[x][0] === "O") {
+//       dfs(x, 0);
+//     }
+//     if (board[x][n-1] === "O") {
+//       dfs(x, n-1);
+//     }
+//   }
+
+//   // 开始遍历地图
+//   for (let x = 0; x < m; x++) {
+//     for (let y = 0; y < n; y++) {
+//       if (board[x][y] === "O") {
+//         board[x][y] = "X";
+//       }
+//       if (board[x][y] === "A") {
+//         board[x][y] = "O"
+//       }
+//     }
+//   }
+
+//   console.log(board);
+// };
+
 var solve = function(board) {
-  // 以下是错误思路，这个题的描述太差，果然是写代码的，表述能力都堪忧
   // 获取行与列
-  // const m = board.length;
-  // const n = board[0].length;
-  // // 四个方向 上下左右 [x,y]
-  // const directions = [[0,-1],[0,1],[-1,0],[1,0]];
+  const row = board.length;
+  const col = board[0].length;
 
-  // // dfs
-  // const dfs = (x, y) => {
-  //   for (const [dx, dy] of directions) {
-  //     // 下个节点的坐标
-  //     const nextX = x + dx;
-  //     const nextY = y + dy;
-  //     // console.log(nextX, nextY);
-  //     // 越界处理
-  //     if (nextX < 0 || nextX >= m || nextY < 0 || nextY >= n) continue;
-  //     // 非O处理
-  //     if (board[nextX][nextX] === "X") continue;
-  //     // 在边界上的O不处理
-  //     if (nextX === 0 || nextX === m-1 || nextY === 0 || nextY === n-1) continue;
-  //     // 其他情况
-  //     board[nextX][nextY] = "X";
-  //     dfs(nextX, nextY);
-  //   }
-  // }
+  // 记录访问过的位置
+  const visited = new Array(row).fill().map(_ => new Array(col).fill(false));
 
-  // // 遍历
-  // for (let x = 1; x < m-1; x++) {
-  //   for (let y = 1; y < n-1; y++) {
-  //     if (board[x][y] === "O") {
-  //       board[x][y] = "X";
-  //       dfs(x, y);
-  //     }
-  //   }
-  // }
+  // 用来记录从为O的边界出发，连成片的区域，这个区域不是被X包围的区域，初始为X
+  const grid = new Array(row).fill().map(_ => new Array(col).fill('X'));
 
-  // 题目描述
-  // 到底要把哪些O改成X，就是完全被X包围的O，如果顺着这个O可以找到边界，那么就不能改
-  /**
-   * 思路:
-   * 1. 从边界出发，找是O的点，以O为起点走起来，遇到O打上特殊标记
-   * 2. 这时候，所有从边界出发的O都变成了特殊标记（比如标记叫A）
-   * 3. 我们再遍历一下地图，如果再遇到O（这个O肯定是内部的O）就变成X，遇到A变成O
-   * 结束，这时候就是我们想要的结果
-   */
+  // 四个方向 上下左右
+  const directions = [
+    [0, -1],
+    [0, 1],
+    [-1, 0],
+    [1, 0]
+  ]
 
-  // 获取行与列
-  const m = board.length;
-  const n = board[0].length;
-  // 四个方向 上下左右 [x,y]
-  const directions = [[0,-1],[0,1],[-1,0],[1,0]];
-
-  // dfs
-  const dfs = (x,y) => {
-    board[x][y] = "A";
-    for (const [dx, dy] of directions) {
-      // 下个节点的坐标
-      const nextX = x + dx;
-      const nextY = y + dy;
-      // 越界处理
-      if (nextX < 0 || nextX >= m || nextY < 0 || nextY >= n) continue;
-      // 非O处理
-      if (board[nextX][nextY] !== "O") continue;
-      // 其他符合条件的情况
-      // board[nextX][nextY] = "A";
-      dfs(nextX, nextY);
+  // dfs函数
+  const dfs = (x, y, visited, board, grid) => {
+    visited[x][y] = true;
+    grid[x][y] = 'O';
+    for (const [_x, _y] of directions) {
+      const nextX = x + _x;
+      const nextY = y + _y;
+      // 处理越界
+      if (nextX < 0 || nextX >= row || nextY < 0 || nextY >= col) continue;
+      // 访问过
+      if (visited[nextX][nextY]) continue;
+      // 非O
+      if (board[nextX][nextY] !== 'O') continue;
+      // 其他点继续dfs往下寻找
+      dfs(nextX, nextY, visited, board, grid);
     }
   }
 
-  // 四个边界
-  // 上下左右
-  // 上下可以写在一起
-  for (let y = 0; y < n; y++) {
-    // 上边界
-    if (board[0][y] === "O") {
-      dfs(0, y);
+  // 遍历board
+  // 只需要遍历边界就可以
+  // 上边界
+  for (let y = 0; y < col; y++) {
+    if (!visited[0][y] && board[0][y] === 'O') {
+      dfs(0, y, visited, board, grid);
     }
-    // 下边界
-    if (board[m-1][y] === "O") {
-      dfs(m-1, y);
+  }
+  // 下边界
+  for (let y = 0; y < col; y++) {
+    if (!visited[row-1][y] && board[row-1][y] === 'O') {
+      dfs(row-1, y, visited, board, grid);
+    }
+  }
+  // 左边界
+  for (let x = 0; x < row; x++) {
+    if (!visited[x][0] && board[x][0] === 'O') {
+      dfs(x, 0, visited, board, grid);
+    }
+  }
+  // 右边界
+  for (let x = 0; x < row; x++) {
+    if (!visited[x][col-1] && board[x][col-1] === 'O') {
+      dfs(x, col-1, visited, board, grid);
     }
   }
 
-  // 左右边界
-  for (x = 0; x < m; x++) {
-    if (board[x][0] === "O") {
-      dfs(x, 0);
-    }
-    if (board[x][n-1] === "O") {
-      dfs(x, n-1);
+  for (let x = 0; x < row; x++) {
+    for (let y = 0; y < col; y++) {
+      board[x][y] = grid[x][y];
     }
   }
+  
+  // console.log(grid);
 
-  // 开始遍历地图
-  for (let x = 0; x < m; x++) {
-    for (let y = 0; y < n; y++) {
-      if (board[x][y] === "O") {
-        board[x][y] = "X";
-      }
-      if (board[x][y] === "A") {
-        board[x][y] = "O"
-      }
-    }
-  }
-
-  console.log(board);
 };
 // @lc code=end
 
-const board = [
-  ["X","X","X","X"],
-  ["X","O","O","X"],
-  ["X","X","O","X"],
-  ["X","O","X","X"]
-]
-
 // const board = [
-//   ["X","X","X"],
-//   ["X","O","X"],
-//   ["X","X","X"]
+//   ["X","X","X","X"],
+//   ["X","O","O","X"],
+//   ["X","X","O","X"],
+//   ["X","O","X","X"]
 // ]
+
+const board = [
+  ["X","X","X"],
+  ["X","O","X"],
+  ["X","X","X"]
+]
 
 // const board = [
 //   ["O","O","O"],

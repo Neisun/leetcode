@@ -97,7 +97,27 @@
  * @return {Node}
  */
 var cloneGraph = function(node) {
-    
+  if (!node) return null;
+  // 旧节点 -> 新节点的映射
+  const map = new Map();
+  const dfs = (node) => {
+    const newNode = new Node(node.val);
+    map.set(node, newNode);
+    for (const _node of node.neighbors) {
+      if (!map.has(_node)) dfs(_node);
+    }
+  }
+  // dfs之后，所有的新节点就已经被创建，并和旧节点维持了映射关系
+  dfs(node);
+
+  // 复制边
+  map.forEach((newNode,oldNode) => {
+    for (const node of oldNode.neighbors) {
+      newNode.neighbors.push(map.get(node));
+    }
+  })
+
+  return map.get(node);
 };
 // @lc code=end
 

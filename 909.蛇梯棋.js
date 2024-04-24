@@ -88,8 +88,7 @@
 var snakesAndLadders = function (board) {
   // 先构建棋盘吧
   const n = board.length;
-  const grid = new Array(n).fill().map(_ => new Array(n).fill(0));
-  // n * n的转行交替棋盘 右 上 左 上 右 上 左 上
+  // n * n的转行交替棋盘 右  左  右  左 
   // 从坐标是[n-1, 0] ~ [n-1, n-1] 开始构造
   // [n-2, n-1] ~ [n-2, 0]
   // [n-3, 0] ~ [n-3, n-1]
@@ -99,14 +98,16 @@ var snakesAndLadders = function (board) {
   let direction = 'right';
   let col = 0;
   let count = 1;
+  // 构建棋盘，我们需要使用map记录一下方格对应的下标
+  // 格式为 1: [x, y];
   const map = new Map();
   for (let row = n - 1; row >= 0; row--) {
     if (direction === 'right') {
       for (; col < n; col++) {
         map.set(count, [row, col]);
-        grid[row][col] = count;
         count++;
       }
+      // 转换方向，到了最后一列
       if (col === n) {
         col = n - 1;
         direction = 'left';
@@ -114,16 +115,49 @@ var snakesAndLadders = function (board) {
     } else {
       for (; col >= 0; col--) {
         map.set(count, [row, col]);
-        grid[row][col] = count;
         count++;
       }
+      // 转换方向，到了第一列
       if (col === -1) {
         col = 0;
         direction = 'right';
       }
     }
   }
-  console.log(map)
+
+  // console.log(map)
+
+  // 从编号是1的位置出发
+  // 使用BFS的方式，为什么使用BFS的方式，如果寻找最少移动次数，那么BFS按层寻找即是最少
+  // 我们需要使用一个set来记录一下点的访问情况，避免重复走，重复走必然不是最优解
+  const visited = new Set();
+
+  // 维护一个栈，记录每次出发的出发位置和走的步数
+  const stack = [[1, 0]];
+  
+  // 开始BFS的方式查找
+  while (stack.length) {
+    const cur = stack.shift(); // [1, 0]
+    // 模拟摇骰子
+    for (let i = 1; i <= 6; i++) {
+      let next = cur[0] + i;
+      // 越界处理
+      if (next > n * n || next < 0) continue;
+      // 找一下next对应的坐标位置
+      const [x, y] = map.get(next);
+      if (board[x][y] !== -1) {
+        next = board[x][y]
+      }
+      // 已经访问过
+      if (visited.has(next)) continue;
+      // 找到结果
+      if (next === n * n) return cur[1]+1;
+      visited.add(next);
+      stack.push([next, cur[1] + 1]);
+    }
+  }
+
+  return -1;
 };
 // @lc code=end
 
@@ -136,5 +170,6 @@ const board = [
   [-1, 15, -1, -1, -1, -1],
 ];
 
-snakesAndLadders(board)
+const r = snakesAndLadders(board);
+console.log(r);
 

@@ -68,7 +68,51 @@
  * @return {number[]}
  */
 var findOrder = function(numCourses, prerequisites) {
+  // 统计入度
+  const rudu = new Array(numCourses).fill(0);
+  for (const [next, prev] of prerequisites) {
+    rudu[next]++;
+  }
+  // 利用hash map记录 映射关系 课: [依赖其的课1, ...]
+  const map = new Map();
+  for (const [next, prev] of prerequisites) {
+    if (!map.has(prev)) {
+      map.set(prev, [next]);
+    } else {
+      map.get(prev).push(next);
+    }
+  }
 
+  // 记录结果
+  const result = [];
+  // 统计已修科目计数
+  let count = 0;
+  
+  // 采用bfs方式去逐层寻找
+  // 入栈: 入度为0的课，入度为0表示当前课没有依赖
+  // 出栈：表示当前课已被修，那么其所有依赖这门课的入度-1
+  const stack = [];
+
+  // 寻找入度为0的课，初始化入栈操作
+  for (let i = 0; i < numCourses; i++) {
+    if (rudu[i] === 0) stack.push(i);
+  }
+
+  // 开始BFS方式逐层寻找
+  while (stack.length) {
+    const cur = stack.shift();
+    count++;
+    result.push(cur);
+    if (count === numCourses) return result;
+    if (map.has(cur)) {
+      for (const course of map.get(cur)) {
+        rudu[course] -= 1;
+        if (rudu[course] === 0) stack.push(course);
+      }
+    }
+  }
+
+  return [];
 };
 // @lc code=end
 

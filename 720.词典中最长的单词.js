@@ -53,7 +53,58 @@
  * @return {string}
  */
 var longestWord = function(words) {
+  /**
+   * 1. 方式一
+   * 我首先想到的是暴力的方式，使用hash map
+   */
+  // const wordDict = new Map();
 
+  // // 遍历所有的单词，记录到map中
+  // for (const word of words) {
+  //   wordDict.set(word, true);
+  // }
+
+  // let result = '';
+  // let longest = 0;
+
+  // // 排序
+  // words.sort((a, b) => {
+  //   if (a.length !== b.length) {
+  //     return a.length - b.length;
+  //   } else {
+  //     return a.localeCompare(b);
+  //   }
+  // })
+
+  // console.log(words);
+
+  // // 遍历所有的单词，然后添加26个小写字母
+  // // a 97
+  // // z 122
+  // // String.fromCharCode()
+  // for (const word of words) {
+  //   for (let i = 97; i <= 122; i++) {
+  //     let _word = word;
+  //     _word += String.fromCharCode(i);
+  //     if (wordDict.has(_word)) {
+  //       if (_word.length > longest) {
+  //         longest = _word.length;
+  //         result = _word;
+  //       }
+  //     }
+  //   }
+  // }
+  
+  // return result;
+
+  /**** 分割线 *****/
+  // 上述方法，貌似解决不了，因为顺序的问题
 };
 // @lc code=end
+
+// const words = ["a", "banana", "app", "appl", "ap", "apply", "apple"]
+// const words = ["m","mo","moc","moch","mocha","l","la","lat","latt","latte","c","ca","cat"]
+// const words = ["yo","ew","fc","zrc","yodn","fcm","qm","qmo","fcmz","z","ewq","yod","ewqz","y"]
+// const r = longestWord(words);
+// console.log(r)
 

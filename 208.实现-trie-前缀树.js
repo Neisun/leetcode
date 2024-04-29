@@ -63,8 +63,49 @@
 
 // @lc code=start
 
+// var Trie = function() {
+//   this.prefix = new Map();
+// };
+
+// /** 
+//  * @param {string} word
+//  * @return {void}
+//  */
+// Trie.prototype.insert = function(word) {
+//   this.prefix.set(word, true);
+// };
+
+// /** 
+//  * @param {string} word
+//  * @return {boolean}
+//  */
+// Trie.prototype.search = function(word) {
+//   return this.prefix.has(word);
+// };
+
+// /** 
+//  * @param {string} prefix
+//  * @return {boolean}
+//  */
+// Trie.prototype.startsWith = function(prefix) {
+//   for (const [w, v] of this.prefix) {
+//     if (this.compare(w, prefix)) return true;
+//   }
+//   return false;
+// };
+
+// Trie.prototype.compare = function (word, prefix) {
+//   const len = prefix.length;
+//   for (let i = 0; i < len; i++) {
+//     if (word[i] !== prefix[i]) return false;
+//   }
+//   return true;
+// }
+
+
 var Trie = function() {
-  this.prefix = new Map();
+  // 构建根节点
+  this.children = {};
 };
 
 /** 
@@ -72,7 +113,63 @@ var Trie = function() {
  * @return {void}
  */
 Trie.prototype.insert = function(word) {
-  this.prefix.set(word, true);
+  /**
+   * 举例说明，对于要插入的单词 goo google
+   * 首先插入的是 goo，那么我们构造出的结构如下
+   * {
+      g: {
+        o: {
+          o: {
+            isEnd: true
+          }
+        }
+      }
+    }
+    更直观的表述是类似于树的结构
+             g
+            /
+           o
+          /
+         o 这里是一个完整的单词，然后打一个标记isEnd
+    接下来我们插入google这个单词
+    我们还是从头开始找，然后插入得到的数据结构是
+    {
+      g: {
+        o: {
+          o: {
+            isEnd: true,
+            g: {
+              l: {
+                e: {
+                  isEnd: true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    更直观的树形展示
+                  g
+                 /
+                o
+               /
+              o => 这里打一个标记isEnd
+             /
+            g
+           /
+          l
+         /
+        e => 这里打一个标记isEnd
+   */
+  let node = this.children;
+  for (const char of word) {
+    if (!node[char]) {
+      node[char] = {};
+    }
+    node = node[char];
+  }
+  node.isEnd = true;
 };
 
 /** 
@@ -80,7 +177,12 @@ Trie.prototype.insert = function(word) {
  * @return {boolean}
  */
 Trie.prototype.search = function(word) {
-  return this.prefix.has(word);
+  let node = this.children;
+  for (const char of word) {
+    if (!node[char]) return false;
+    node = node[char];
+  }
+  return !!node && !!node.isEnd
 };
 
 /** 
@@ -88,19 +190,14 @@ Trie.prototype.search = function(word) {
  * @return {boolean}
  */
 Trie.prototype.startsWith = function(prefix) {
-  for (const [w, v] of this.prefix) {
-    if (this.compare(w, prefix)) return true;
+  let node = this.children;
+  for (const char of prefix) {
+    if (!node[char]) return false;
+    node = node[char];
   }
-  return false;
+  return !!node;
 };
 
-Trie.prototype.compare = function (word, prefix) {
-  const len = prefix.length;
-  for (let i = 0; i < len; i++) {
-    if (word[i] !== prefix[i]) return false;
-  }
-  return true;
-}
 
 /**
  * Your Trie object will be instantiated and called as such:
@@ -112,6 +209,8 @@ Trie.prototype.compare = function (word, prefix) {
 // @lc code=end
 
 
+// 上述解法，即使通过了测试用例，但这个做法并不是前缀树或者叫前缀表的数据结构，所以我们重新写一下
+
 const trie = new Trie();
 trie.insert('apple');
 console.log(trie.search('apple')); // true
@@ -119,17 +218,3 @@ console.log(trie.search('app')); // false
 console.log(trie.startsWith('app')); // true
 trie.insert('app');
 console.log(trie.search('app')); // true
-
-/**
- * apple
- * {
- *  a: {
- *    p: {
- *      l: {
- *        e: {
- *          }
- *       }
- *     }
- *  },
- * }
- */

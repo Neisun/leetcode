@@ -57,54 +57,113 @@ var longestWord = function(words) {
    * 1. 方式一
    * 我首先想到的是暴力的方式，使用hash map
    */
-  // const wordDict = new Map();
-
-  // // 遍历所有的单词，记录到map中
-  // for (const word of words) {
-  //   wordDict.set(word, true);
-  // }
-
-  // let result = '';
-  // let longest = 0;
-
-  // // 排序
+  // 对words进行排序处理
   // words.sort((a, b) => {
+  //   // 两个字符串长度不一致，短的排在前，长的排在后
   //   if (a.length !== b.length) {
   //     return a.length - b.length;
   //   } else {
-  //     return a.localeCompare(b);
+  //     // 长度一致，那么按照字典序返回，所以，我们需要将字典序靠前的排在后边
+  //     return b.localeCompare(a);
   //   }
   // })
 
-  // console.log(words);
 
-  // // 遍历所有的单词，然后添加26个小写字母
-  // // a 97
-  // // z 122
-  // // String.fromCharCode()
+  // let result = '';
+  // const wordDict = new Set();
+  // wordDict.add('');
+  
+  // // 遍历words
   // for (const word of words) {
-  //   for (let i = 97; i <= 122; i++) {
-  //     let _word = word;
-  //     _word += String.fromCharCode(i);
-  //     if (wordDict.has(_word)) {
-  //       if (_word.length > longest) {
-  //         longest = _word.length;
-  //         result = _word;
-  //       }
-  //     }
+  //   // 截取每个word的除了最后一个字符
+  //   const _word = word.slice(0, word.length - 1);
+  //   if (wordDict.has(_word)) {
+  //     result = word;
+  //     wordDict.add(word)
   //   }
   // }
-  
+
   // return result;
 
   /**** 分割线 *****/
-  // 上述方法，貌似解决不了，因为顺序的问题
+
+  /**
+   * 上述处理方式有一点难懂的地方就是b.localcompare(a)是反着来的
+   * 对于这种逐步查找的我们尝试使用前缀树来求解
+   */
+  // 首先需要构建前缀树
+  class TrieNode {
+    constructor() {
+      this.children = {};
+      this.isEnd = false;
+    }
+  }
+
+  // 构建Trie
+  // 他的数据结构是这样的
+  
+  class Trie {
+    constructor() {
+      this.node = new TrieNode();
+      // this.children = new TrieNode();
+      // this.isEnd = false;
+    }
+
+    // insert方法
+    insert(word) {
+      let node = this.node;
+      for (const char of word) {
+        if (!node.children[char]) {
+          node.children[char] = new TrieNode();
+        }
+        node = node.children[char];
+      }
+      node.isEnd = true;
+    }
+
+    // search方法，确切地说，应该叫匹配前缀，searchPrefix
+    search(word) {
+      let node = this.node;
+      for (const char of word) {
+        // 这段代码是关键
+        if (!node.children[char] || !node.children[char].isEnd) return false;
+        node = node.children[char];
+      }
+      return node && node.isEnd;
+    }
+  }
+
+
+  const trie = new Trie();
+
+  // 遍历words，构建Trie树
+  for (const word of words) {
+    trie.insert(word);
+  }
+
+  let longest = '';
+
+  // 遍历words，利用Trie树寻找最长的单词
+  for (const word of words) {
+    if (trie.search(word)) {
+      if (word.length > longest.length || (word.length === longest.length && word.localeCompare(longest) < 0)) {
+        longest = word;
+      }
+    }
+  }
+
+
+  // 需要明白为什么banana为什么search的时候是false
+  // 因为没有以b ba ban ...之类的前缀
+
+  return longest;
+
 };
 // @lc code=end
 
-// const words = ["a", "banana", "app", "appl", "ap", "apply", "apple"]
+const words = ["a", "banana", "app", "appl", "ap", "apply", "apple"]
 // const words = ["m","mo","moc","moch","mocha","l","la","lat","latt","latte","c","ca","cat"]
 // const words = ["yo","ew","fc","zrc","yodn","fcm","qm","qmo","fcmz","z","ewq","yod","ewqz","y"]
-// const r = longestWord(words);
-// console.log(r)
+const r = longestWord(words);
+console.log(r)
 

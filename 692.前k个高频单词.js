@@ -62,7 +62,35 @@
  * @return {string[]}
  */
 var topKFrequent = function(words, k) {
+  // 利用map，统计每个单词出现的次数
+  const map = new Map();
+  for (const word of words) {
+    map.set(word, (map.get(word) || 0) + 1);
+  }
+  // console.log(map);
+  // 根据map构建一个二维数组
+  const wordList = [...map];
+  // 排序
+  wordList.sort((a, b) => {
+    if (a[1] > b[1]) {
+      return -1;
+    } else if (a[1] < b[1]) {
+      return 1;
+    } else {
+      return a[0].localeCompare(b[0]);
+    }
+  })
 
+  const result = [];
+
+  for (let i = 0; i < k; i++) {
+    result.push(wordList[i][0]);
+  }
+
+  return result;
 };
 // @lc code=end
+
+const words = ["the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is", "day"], k = 4;
+topKFrequent(words, k);
 

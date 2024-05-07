@@ -89,85 +89,194 @@ var ladderLength = function(beginWord, endWord, wordList) {
    */
   
   // ** 第一步 形成一个字典
-  const dictMap = new Map();
+  // const dictMap = new Map();
 
-  // 形成字典的方法
-  const generateDict = (targetWord, wordList) => {
-    dictMap.set(targetWord, []);
-    for (const word of wordList) {
-      let count = 0;
-      for (let i = 0; i < targetWord.length; i++) {
-        if (targetWord[i] !== word[i]) {
-          count++;
-        }
-      }
-      if (count === 1) {
-        if (dictMap.get(targetWord)) {
-          dictMap.get(targetWord).push(word);
-        }
-      }
-    }
-  }
-
-  // 形成字典
-  generateDict(beginWord, wordList);
-  for (const targetWord of wordList) {
-    generateDict(targetWord, wordList);
-  }
-  
-  console.log(dictMap);
-
-  // ** 第二步
-  // const visited = new Map();
-  // let result = Infinity;
-
-  // // DFS函数
-  // const dfs = (currentWord, path) => {
-  //   if (currentWord === endWord) {
-  //     result = Math.min(result, path.length);
-  //     return;
-  //   }
-  //   // 获取要遍历的单词列表
-  //   const list = dictMap.get(currentWord);
-  //   for (const word of list) {
-  //     if (!visited.get(word)) {
-  //       path.push(word);
-  //       visited.set(word, true);
-  //       dfs(word, path);
-  //       path.pop();
-  //       visited.set(word, false);
+  // // 形成字典的方法
+  // const generateDict = (targetWord, wordList) => {
+  //   dictMap.set(targetWord, []);
+  //   for (const word of wordList) {
+  //     let count = 0;
+  //     for (let i = 0; i < targetWord.length; i++) {
+  //       if (targetWord[i] !== word[i]) {
+  //         count++;
+  //       }
+  //     }
+  //     if (count === 1) {
+  //       if (dictMap.get(targetWord)) {
+  //         dictMap.get(targetWord).push(word);
+  //       }
   //     }
   //   }
   // }
-  // visited.set(beginWord, true);
-  // dfs(beginWord, [beginWord]);
+
+  // // 形成字典
+  // generateDict(beginWord, wordList);
+  // for (const targetWord of wordList) {
+  //   generateDict(targetWord, wordList);
+  // }
   
-  // console.log(result === Infinity ? 0 : result);
+  // console.log(dictMap);
 
-  // return result === Infinity ? 0 : result;
+  // // ** 第二步
+  // // const visited = new Map();
+  // // let result = Infinity;
 
-  // 应该使用bfs的方式
-  const queue = [beginWord];
-  const visited = new Map();
-  visited.set(beginWord, 1);
+  // // // DFS函数
+  // // const dfs = (currentWord, path) => {
+  // //   if (currentWord === endWord) {
+  // //     result = Math.min(result, path.length);
+  // //     return;
+  // //   }
+  // //   // 获取要遍历的单词列表
+  // //   const list = dictMap.get(currentWord);
+  // //   for (const word of list) {
+  // //     if (!visited.get(word)) {
+  // //       path.push(word);
+  // //       visited.set(word, true);
+  // //       dfs(word, path);
+  // //       path.pop();
+  // //       visited.set(word, false);
+  // //     }
+  // //   }
+  // // }
+  // // visited.set(beginWord, true);
+  // // dfs(beginWord, [beginWord]);
+  
+  // // console.log(result === Infinity ? 0 : result);
 
-  while (queue.length) {
-    const word = queue.shift();
-    const count = visited.get(word);
-    const list = dictMap.get(word);
-    for (const currentWord of list) {
-      if (currentWord === endWord) {
-        return count + 1;
-      };
-      if (!visited.get(currentWord)) {
-        queue.push(currentWord);
-        visited.set(currentWord, count+1);
+  // // return result === Infinity ? 0 : result;
+
+  // // 应该使用bfs的方式
+  // const queue = [beginWord];
+  // const visited = new Map();
+  // visited.set(beginWord, 1);
+
+  // while (queue.length) {
+  //   const word = queue.shift();
+  //   const count = visited.get(word);
+  //   const list = dictMap.get(word);
+  //   for (const currentWord of list) {
+  //     if (currentWord === endWord) {
+  //       return count + 1;
+  //     };
+  //     if (!visited.get(currentWord)) {
+  //       queue.push(currentWord);
+  //       visited.set(currentWord, count+1);
+  //     }
+  //   }
+  // }
+
+
+  // return 0;
+
+
+  /**
+   * 2024-05-07 重刷
+   */
+  
+  // 构造需要的数据结构
+  // const generate = (beginWord, wordList, map) => {
+  //   for (const curWord of wordList) {
+  //     let count = 0;
+  //     // 对比
+  //     for (let i = 0; i < curWord.length; i++) {
+  //       if (beginWord[i] !== curWord[i]) {
+  //         count++;
+  //       }
+  //     }
+  //     if (count === 1) {
+  //       if (map.has(beginWord)) {
+  //         map.get(beginWord).push(curWord);
+  //       } else {
+  //         map.set(beginWord, [curWord]);
+  //       }
+  //     }
+  //   }
+  // }
+
+  // const map = new Map();
+
+  // generate(beginWord, wordList, map);
+
+  // // 构造wordList中其他的单词
+  // for (const word of wordList) {
+  //   generate(word, wordList, map);
+  // }
+
+  // // console.log(map);
+
+  // // 记录访问过
+  // const visited = new Set();
+
+  // const stack = [beginWord];
+  // visited.add(beginWord);
+  // let result = 0;
+
+  // while (stack.length) {
+  //   const len = stack.length;
+  //   result++;
+  //   for (let i = 0; i < len; i++) {
+  //     const cur = stack.shift();
+  //     if (cur === endWord) {
+  //       return result;
+  //     }
+  //     if (map.has(cur)) {
+  //       for (const word of map.get(cur)) {
+  //         if (!visited.has(word)) {
+  //           stack.push(word);
+  //           visited.add(word);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  
+  // return 0;
+
+  /**
+   * 2024-05-07 新的解法
+   */
+  const wordSet = new Set(wordList);
+  const stack = [beginWord];
+  let count = 0;
+  while (stack.length) {
+    const len = stack.length;
+    count++;
+    for (let i = 0; i < len; i++) {
+      const word = stack.shift();
+      if (word === endWord) {
+        return count;
+      }
+      for (let j = 0; j < word.length; j++) {
+        for (let c = 97; c <= 122; c++) {
+          const newWord = word.slice(0, j) + String.fromCharCode(c) + word.slice(j+1);
+          if (wordSet.has(newWord)) {
+            stack.push(newWord);
+            wordSet.delete(newWord);
+          }
+        }
       }
     }
   }
-
-
   return 0;
+  // const stack = [[beginWord, 0]];
+  // while (stack.length) {
+  //   const [word, level] = stack.shift();
+  //   if (word === endWord) {
+  //     return level + 1;
+  //   }
+  //   // 单词的每个位置，都用26个字母替换，找在wordSet中出现的
+  //   for (let i = 0; i < word.length; i++) {
+  //     for (let c = 97; c <= 122; c++) {
+  //       const newWord = word.slice(0, i) + String.fromCharCode(c) + word.slice(i+1);
+  //       if (wordSet.has(newWord)) {
+  //         stack.push([newWord, level+1]);
+  //         wordSet.delete(newWord);
+  //       }
+  //     }
+  //   }
+  // }
+  // return 0;
 };
 // @lc code=end
 

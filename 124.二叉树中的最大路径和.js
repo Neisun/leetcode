@@ -62,7 +62,55 @@
  * @return {number}
  */
 var maxPathSum = function(root) {
+  /**
+   * what`s is path?
+   * It doesn`t have to include the root node
+   * So How can we solve it?
+   */
+  // 按照哪种遍历方式？前 中 后序？
+  // 我个人倾向于 使用后序遍历，先找左，再找右
+  // 根据left 和 right是否大于0进行判断
+  // 如果left < 0 right > 0 max = right + root.val
+  // left < 0 right <= 0 max = root.val
+  // left >= 0 right > 0 max = left + right + root.val
+  // left >= 0 right <= 0 max = root.val + left
+  if (!root) return 0;
+  const left = maxPathSum(root.left);
+  const right = maxPathSum(root.right);
 
+  // 1. 左 = 0 右 = 0 max = root.val
+  // 2. 左 = 0 右 < 0 max = root.val
+  // 3. 左 = 0 右 > 0 max = root.val + right
+  // 4. 左 < 0 右 = 0 max = root.val
+  // 5. 左 < 0 右 < 0 max = root.val
+  // 6. 左 < 0 右 > 0 max = root.val + right
+  // 7. 左 > 0 右 = 0 max = root.val + left
+  // 8. 左 > 0 右 < 0 max = root.val + left
+  // 9. 左 > 0 右 > 0 max = root.val + left + right
+  
+  // 我们把上述情况做一个简化
+  // 好像不对，还需要考虑 root.val的情况
+  if (root.val >= 0) {
+    if (left <= 0 && right > 0) {
+      return root.val + right;
+    } else if (left > 0 && right <= 0) {
+      return root.val + left;
+    } else if (left > 0 && right > 0) {
+      return root.val + left + right;
+    } else {
+      return root.val;
+    }
+  } else {
+    if (left <= 0 && right > 0) {
+      return right;
+    } else if (left > 0 && right <= 0) {
+      return left;
+    } else if (left > 0 && right > 0) {
+      return left + right;
+    } else {
+      return root.val;
+    }
+  }
 };
 // @lc code=end
 

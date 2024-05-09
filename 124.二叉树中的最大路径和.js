@@ -67,50 +67,70 @@ var maxPathSum = function(root) {
    * It doesn`t have to include the root node
    * So How can we solve it?
    */
-  // 按照哪种遍历方式？前 中 后序？
-  // 我个人倾向于 使用后序遍历，先找左，再找右
-  // 根据left 和 right是否大于0进行判断
-  // 如果left < 0 right > 0 max = right + root.val
-  // left < 0 right <= 0 max = root.val
-  // left >= 0 right > 0 max = left + right + root.val
-  // left >= 0 right <= 0 max = root.val + left
-  if (!root) return 0;
-  const left = maxPathSum(root.left);
-  const right = maxPathSum(root.right);
+  // // 按照哪种遍历方式？前 中 后序？
+  // // 我个人倾向于 使用后序遍历，先找左，再找右
+  // // 根据left 和 right是否大于0进行判断
+  // // 如果left < 0 right > 0 max = right + root.val
+  // // left < 0 right <= 0 max = root.val
+  // // left >= 0 right > 0 max = left + right + root.val
+  // // left >= 0 right <= 0 max = root.val + left
+  // if (!root) return 0;
+  // const left = maxPathSum(root.left);
+  // const right = maxPathSum(root.right);
 
-  // 1. 左 = 0 右 = 0 max = root.val
-  // 2. 左 = 0 右 < 0 max = root.val
-  // 3. 左 = 0 右 > 0 max = root.val + right
-  // 4. 左 < 0 右 = 0 max = root.val
-  // 5. 左 < 0 右 < 0 max = root.val
-  // 6. 左 < 0 右 > 0 max = root.val + right
-  // 7. 左 > 0 右 = 0 max = root.val + left
-  // 8. 左 > 0 右 < 0 max = root.val + left
-  // 9. 左 > 0 右 > 0 max = root.val + left + right
+  // // 1. 左 = 0 右 = 0 max = root.val
+  // // 2. 左 = 0 右 < 0 max = root.val
+  // // 3. 左 = 0 右 > 0 max = root.val + right
+  // // 4. 左 < 0 右 = 0 max = root.val
+  // // 5. 左 < 0 右 < 0 max = root.val
+  // // 6. 左 < 0 右 > 0 max = root.val + right
+  // // 7. 左 > 0 右 = 0 max = root.val + left
+  // // 8. 左 > 0 右 < 0 max = root.val + left
+  // // 9. 左 > 0 右 > 0 max = root.val + left + right
   
-  // 我们把上述情况做一个简化
-  // 好像不对，还需要考虑 root.val的情况
-  if (root.val >= 0) {
-    if (left <= 0 && right > 0) {
-      return root.val + right;
-    } else if (left > 0 && right <= 0) {
-      return root.val + left;
-    } else if (left > 0 && right > 0) {
-      return root.val + left + right;
-    } else {
-      return root.val;
-    }
-  } else {
-    if (left <= 0 && right > 0) {
-      return right;
-    } else if (left > 0 && right <= 0) {
-      return left;
-    } else if (left > 0 && right > 0) {
-      return left + right;
-    } else {
-      return root.val;
-    }
+  // // 我们把上述情况做一个简化
+  // // 好像不对，还需要考虑 root.val的情况
+  // if (root.val >= 0) {
+  //   if (left <= 0 && right > 0) {
+  //     return root.val + right;
+  //   } else if (left > 0 && right <= 0) {
+  //     return root.val + left;
+  //   } else if (left > 0 && right > 0) {
+  //     return root.val + left + right;
+  //   } else {
+  //     return root.val;
+  //   }
+  // } else {
+  //   if (left <= 0 && right > 0) {
+  //     return right;
+  //   } else if (left > 0 && right <= 0) {
+  //     return left;
+  //   } else if (left > 0 && right > 0) {
+  //     return left + right;
+  //   } else {
+  //     return root.val;
+  //   }
+  // }
+
+  // 重做，思路不对
+  let maxSum = -Infinity;
+  
+  const maxVal = root => {
+    if (!root) return 0;
+
+    // 利用后续遍历
+    // 找出left与right，需要注意的时候，需要跟0做对比
+    const left = Math.max(maxVal(root.left), 0);
+    const right = Math.max(maxVal(root.right), 0);
+    // 新的最大路径之和
+    const newPathSum = root.val + left + right;
+    // 打擂台比较
+    maxSum = Math.max(maxSum, newPathSum);
+    // 最终返回，当前节点+左右孩子最大的那个
+    return root.val + Math.max(left, right);
   }
+  maxVal(root);
+  return maxSum;
 };
 // @lc code=end
 

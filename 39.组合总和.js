@@ -43,24 +43,52 @@
 //   return result;
 // };
 // 好的写法，这道题其实与之前的求组合的方式如出一辙，只是它可以重复利用元素
+// var combinationSum = function(candidates, target) {
+//   // 结果集
+//   const result = [];
+//   // 回溯求解函数
+//   const backtracing = (candidates, target, path, start) => {
+//     if (target < 0) return; // 剪枝操作
+//     if (target === 0) {
+//       result.push([...path]);
+//       return;
+//     }
+//     for (let i = start; i < candidates.length; i++) {
+//       // if (target < candidates[i]) continue; // 剪枝操作
+//       path.push(candidates[i]);
+//       backtracing(candidates, target - candidates[i], path, i); // 重点，取重复值 i就不用+1
+//       path.pop();
+//     }
+//   }
+//   backtracing(candidates, target, [], 0);
+//   return result;
+// };
+
 var combinationSum = function(candidates, target) {
+  /**
+   * 2024-05-10 再刷
+   * 这个图很清晰的说明了遍历的代码思路
+   * https://code-thinking-1253855093.file.myqcloud.com/pics/20201223170730367.png
+   */
   // 结果集
   const result = [];
-  // 回溯求解函数
-  const backtracing = (candidates, target, path, start) => {
-    if (target < 0) return; // 剪枝操作
-    if (target === 0) {
+  // dfs函数
+  const dfs = (start, path, sum) => {
+    if (sum === target) {
       result.push([...path]);
+      // 递归结束
       return;
     }
     for (let i = start; i < candidates.length; i++) {
-      // if (target < candidates[i]) continue; // 剪枝操作
-      path.push(candidates[i]);
-      backtracing(candidates, target - candidates[i], path, i); // 重点，取重复值 i就不用+1
-      path.pop();
+      const num = candidates[i];
+      if (sum + num <= target) {
+        path.push(num);
+        dfs(i, path, sum + num);
+        path.pop();
+      }
     }
   }
-  backtracing(candidates, target, [], 0);
+  dfs(0, [], 0);
   return result;
 };
 // @lc code=end

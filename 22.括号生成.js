@@ -47,7 +47,32 @@
  * @return {string[]}
  */
 var generateParenthesis = function(n) {
+  /**
+   * 思路来自于 https://www.bilibili.com/video/BV1xV411q7wE/?spm_id_from=333.337.search-card.all.click
+   * 这个题说实话，我个人感觉难度挺大的，难点在于很难想
+   * 没有太多的思路
+   * 直到看了上述的B站的视频，哦豁，讲的真棒
+   */
+  // 结果集
+  const result = [];
+  
+  const dfs = (left, right, pathStr) => {
+    // 无效组合
+    if (right > left) return;
+    // 找到了结果
+    if (left === n && right === n) {
+      result.push(pathStr);
+    }
+    if (left < n) {
+      dfs(left+1, right, pathStr + '(');
+    }
+    if (right < left) {
+      dfs(left, right + 1, pathStr + ')');
+    }
+  }
 
+  dfs(0, 0, '');
+  return result;
 };
 // @lc code=end
 

@@ -54,7 +54,51 @@
  * @return {number}
  */
 var totalNQueens = function(n) {
+  // 构建棋盘 使用0填充，当放置皇后，该位置变为1
+  const board = new Array(n).fill().map(_ => new Array(n).fill(0));
 
+  // 需要一个函数检查，当前位置是否可行
+  const isValid = (row, col) => {
+    // 检查行与列
+    for (let x = row - 1; x >= 0 && x < n; x--) {
+      if (board[x][col] === 1) return false;
+    }
+    for (let y = col - 1; y >= 0 && y < n; y--) {
+      if (board[row][y] === 1) return false;
+    }
+    // 检查对角线
+    // 在左上对角线
+    for (let x = row - 1, y = col - 1; x >= 0 && y >= 0 && x < n && y < n; x--, y--) {
+      if (board[x][y] === 1) return false;
+    }
+    // 右上对角线
+    for (let x = row - 1, y = col + 1; x >= 0 && y >= 0 && x < n && y < n; x--, y++) {
+      if (board[x][y] === 1) return false;
+    }
+    // 检查左上
+    // 检查右上
+    return true;
+  }
+
+  let result = 0;
+
+  // 创建一个dfs函数
+  const dfs = (row) => {
+    if (row === n) {
+      result++;
+      return;
+    }
+    for (let col = 0; col < n; col++) {
+      if (isValid(row, col)) {
+        board[row][col] = 1;
+        dfs(row+1);
+        board[row][col] = 0;
+      }
+    }
+  }
+
+  dfs(0);
+  return result;
 };
 // @lc code=end
 

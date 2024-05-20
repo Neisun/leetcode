@@ -110,6 +110,93 @@ var sortList = function(head) {
    * 2. 利用21题，合并两个有序链表思想 分别处理左右
    * 整个链表处理完毕
    */
+
+  // 先写一个工具函数用来merge两个链表
+  // const merge = (head1, head2) => {
+  //   const dummyNode = new ListNode();
+  //   let head = dummyNode;
+  //   let temp1 = head1;
+  //   let temp2 = head2;
+  //   while (temp1 && temp2) {
+  //     if (temp1.val <= temp2.val) {
+  //       head.next = temp1;
+  //       temp1 = temp1.next;
+  //     } else {
+  //       head.next = temp2;
+  //       temp2 = temp2.next;
+  //     }
+  //     head = head.next;
+  //   }
+
+
+  //   if (temp1) {
+  //     head.next = temp1;
+  //   } else if (temp2) {
+  //     head.next = temp2;
+  //   }
+
+  //   // while (temp1) {
+  //   //   // 找到节点，暂存节点
+  //   //   let temp = temp1;
+  //   //   // 切换后续联系
+  //   //   temp.next = null;
+  //   //   // 挂到新节点后
+  //   //   head.next = temp;
+  //   //   // 往下继续遍历
+  //   //   temp1 = temp1.next;
+  //   //   head = head.next;
+  //   // }
+
+  //   // while (temp2) {
+  //   //   // 找到节点，暂存节点
+  //   //   let temp = temp2;
+  //   //   // 切换后续联系
+  //   //   temp.next = null;
+  //   //   // 挂到新节点后
+  //   //   head.next = temp;
+  //   //   // 往下继续遍历
+  //   //   temp2 = temp2.next;
+  //   //   head = head.next;
+  //   // }
+
+  //   return dummyNode.next;
+  // }
+
+  // const helper = (head, tail) => {
+  //   if (!head) return null;
+  //   // 链表只有一个节点时候
+  //   // 为什么要将next置为空节点，并返回head呢
+  //   if (head.next === tail) {
+  //     head.next = null;
+  //     return head;
+  //   }
+
+  //   let fast = head;
+  //   let slow = head;
+
+  //   while (fast !== tail) {
+  //     fast = fast.next;
+  //     slow = slow.next;
+  //     if (fast !== tail) {
+  //       fast = fast.next;
+  //     }
+  //   }
+  //   const mid = slow
+  //   return merge(helper(head, mid), helper(mid, tail));
+  // }
+
+  // return helper(head, null);
+
+
+  /**
+   * 重新写吧
+   * 因为对于这段代码
+   *   //   if (head.next === tail) {
+    //     head.next = null;
+    //     return head;
+    //   }
+    没有理解好，决定换个思路
+   */
 };
 // @lc code=end
 

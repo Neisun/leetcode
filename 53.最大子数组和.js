@@ -80,19 +80,44 @@
 // };
 
 // 动态规划方式复习
+// var maxSubArray = function(nums) {
+//   const len = nums.length;
+//   const dp = [];
+//   let max = nums[0];
+//   // 状态转移方程
+//   // dp[i]表示以第i个数结尾最大连续子序列和 那么这个nums[i]加不加的问题，如果不加,那就是nums[i]，如果加那就是 dp[i-1] + nums[i]
+//   // dp[i] = Math.max(dp[i-1], dp[i-1] + nums[i]);
+//   dp[0] = nums[0];
+//   for (let i = 1; i < len; i++) {
+//     dp[i] = Math.max(nums[i], dp[i-1] + nums[i]);
+//     max = Math.max(max, dp[i]);
+//   }
+//   return max;
+// };
+
+
+
 var maxSubArray = function(nums) {
+  /**
+   * 2024-05-21 重刷
+   */
+  // 动态规划
   const len = nums.length;
-  const dp = [];
-  let max = nums[0];
-  // 状态转移方程
-  // dp[i]表示以第i个数结尾最大连续子序列和 那么这个nums[i]加不加的问题，如果不加,那就是nums[i]，如果加那就是 dp[i-1] + nums[i]
-  // dp[i] = Math.max(dp[i-1], dp[i-1] + nums[i]);
+  // 构建dp数组
+  // dp[i]表示以下标i结尾的连续子数组的最大和
+  const dp = new Array(len).fill(0);
+  // 状态转移
+  // dp[i-1] 如果 <= 0 那么没有贡献 dp[i] = nums[i]
+  // 否则 dp[i] = dp[i-1] + nums[i]
   dp[0] = nums[0];
+  let res = nums[0];
   for (let i = 1; i < len; i++) {
-    dp[i] = Math.max(nums[i], dp[i-1] + nums[i]);
-    max = Math.max(max, dp[i]);
+    dp[i] = Math.max(dp[i-1]+nums[i], nums[i]);
+    if (dp[i] > res) res = dp[i];
   }
-  return max;
+  // console.log(dp)
+  // 为什么结果不是dp[len-1]是因为最大值，不一定是以len-1结尾的子数组
+  return res;
 };
 // @lc code=end
 const nums = [-2,1,-3,4,-1,2,1,-5,4];

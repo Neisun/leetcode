@@ -65,9 +65,40 @@
  * @return {number}
  */
 var maxSubarraySumCircular = function(nums) {
-  const len = nums.length;
-  const dp = new Array(len).fill(0);
-  dp[0] = nums[0];
+  /**
+   * 一个比较巧妙的方式求解
+   * 最大子数组和记为 maxSum
+   * 最小子数组和记为 minSum
+   * 数组的总和记为 sum
+   * 那么最大的就是 sum-minSum
+   * 参考题解：https://zhuanlan.zhihu.com/p/97183504
+   */
+  let sum = nums[0];
+  let preMax = nums[0];
+  let preMin = nums[0];
+  let maxSum = nums[0];
+  let minSum = nums[0];
+
+  for (let i = 1; i < nums.length; i++) {
+    // sum统计总和
+    sum += nums[i];
+    
+    // 统计最大
+    preMax = Math.max(preMax + nums[i], nums[i]);
+
+    // 统计最小
+    preMin = Math.min(preMin + nums[i], nums[i]);
+
+    maxSum = Math.max(maxSum, preMax);
+    
+    minSum = Math.min(minSum, preMin);
+  }
+
+  if (sum === minSum) { // 全是正数 或者 全是负数的情况
+    return maxSum;
+  }
+
+  return Math.max(maxSum, sum - minSum);
 };
 // @lc code=end
 

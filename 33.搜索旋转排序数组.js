@@ -66,7 +66,46 @@
  * @return {number}
  */
 var search = function(nums, target) {
+  /**
+   * 思路1
+   * 找出反转的位置
+   * 根据反转的位置，拆分成两部分，然后分别使用二分
+   */
+  let reverseIdx = 0;
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] < nums[i-1]) {
+      reverseIdx = i;
+      break;
+    }
+  }
 
+  let l1 = 0;
+  let r1 = reverseIdx - 1;
+  while (l1 <= r1) {
+    let mid = Math.floor((l1+r1)/2);
+    if (nums[mid] === target) {
+      return mid;
+    } else if (nums[mid] < target) {
+      l1 = mid + 1;
+    } else {
+      r1 = mid - 1;
+    }
+  }
+
+  let l2 = reverseIdx;
+  let r2 = nums.length - 1;
+  while (l2 <= r2) {
+    let mid = Math.floor((l2+r2)/2);
+    if (nums[mid] === target) {
+      return mid;
+    } else if (nums[mid] < target) {
+      l2 = mid + 1;
+    } else {
+      r2 = mid - 1;
+    }
+  }
+  
+  return -1;
 };
 // @lc code=end
 

@@ -73,7 +73,26 @@
  * @return {number}
  */
 var findMin = function(nums) {
+  /**
+   * 如果找到了旋转点，就可以找到最小的值
+   * 于是改成二分找旋转点
+   * 如何找？
+   * 与数组的第一项作比较
+   */
+  let l = 0;
+  let r = nums.length - 1;
 
+  while (l < r) {
+    // 为了处理 [11,13,15,17] 这种没有旋转的情况，需要+1处理，否则死循环
+    let mid = Math.floor((l+r+1)/2);
+    if (nums[mid] >= nums[0]) { // 旋转点在右边
+      l = mid;
+    } else { // 旋转点在左边
+      r = mid - 1;
+    }
+  }
+
+  return r + 1 < nums.length ? nums[r+1] : nums[0];
 };
 // @lc code=end
 

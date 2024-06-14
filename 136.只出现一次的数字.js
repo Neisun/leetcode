@@ -62,16 +62,37 @@
  * @return {number}
  */
 var singleNumber = function(nums) {
-  if (nums.length === 1) return nums[0];
-  // 采用hash map 的方式求解不行么？？试一下
-  let map = new Map();
-  for (let i = 0; i < nums.length; i++) {
-    map.set(nums[i], (map.get(nums[i]) || 0) + 1);
-  }
+  // if (nums.length === 1) return nums[0];
+  // // 采用hash map 的方式求解不行么？？试一下
+  // let map = new Map();
+  // for (let i = 0; i < nums.length; i++) {
+  //   map.set(nums[i], (map.get(nums[i]) || 0) + 1);
+  // }
 
-  for (const [k, v] of map) {
-    if (v === 1) return k;
+  // for (const [k, v] of map) {
+  //   if (v === 1) return k;
+  // }
+
+  /**
+   * 采用异或的方式求解
+   * 相同的数字异或运算等于 0
+   * 不同的数字异或运算等于 1
+   * 异或满足交换率和结合率
+   * 4 1 2 1 2
+   * 0 ^ 4 ^ 1 ^ 2 ^ 1 ^ 2
+   * 转换成
+   * 0 ^ 4 ^ 1 ^ 1 ^ 2 ^ 2
+   * 0 ^ 4 ^ 0 ^ 0
+   * 0 ^ 4 ^ 0
+   * 4 ^ 0 ^ 0
+   * 4 ^ 0
+   * 4
+   */
+  let ans = 0;
+  for (const num of nums) {
+    ans = ans ^ num
   }
+  return ans;
 };
 // @lc code=end
 

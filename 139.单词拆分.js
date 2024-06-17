@@ -43,27 +43,33 @@ var wordBreak = function(s, wordDict) {
    * 如果 dp[j]是true，那么如果 [j, k] 够成的字符串可以由字典拼接出来，那么dp[k] = true
    */
   
-  // 字符串的长度
-  const sl = s.length;
-  // 构造dp数组
-  const dp = new Array(sl+1).fill(false);
+  // // 字符串的长度
+  // const sl = s.length;
+  // // 构造dp数组
+  // const dp = new Array(sl+1).fill(false);
 
-  // 初始化? 空字符串必然可以由字典拼接出来
-  dp[0] = true;
+  // // 初始化? 空字符串必然可以由字典拼接出来
+  // dp[0] = true;
 
-  // 遍历
-  for (let i = 1; i <= sl; i++) {
-    for (let k = 0; k < i; k++) {
-      const str = s.substring(k, i);
-      if (dp[k] && wordDict.includes(str)) {
-        dp[i] = true;
-      }
-    }
-  }
+  // // 遍历
+  // for (let i = 1; i <= sl; i++) {
+  //   for (let k = 0; k < i; k++) {
+  //     const str = s.substring(k, i);
+  //     if (dp[k] && wordDict.includes(str)) {
+  //       dp[i] = true;
+  //     }
+  //   }
+  // }
 
-  // console.log(dp);
+  // // console.log(dp);
 
-  return dp[sl];
+  // return dp[sl];
+
+
+  /**
+   * 2024-06-17 重新梳理
+   * 貌似对这个题目已经没有了思路，二刷强化印象
+   */
 };
 // @lc code=end
 const s = "leetcode", wordDict = ["leet", "code"];

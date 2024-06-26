@@ -70,6 +70,38 @@ var wordBreak = function(s, wordDict) {
    * 2024-06-17 重新梳理
    * 貌似对这个题目已经没有了思路，二刷强化印象
    */
+  // const n = s.length;
+  // const dp = new Array(n+1).fill(false);
+  // const dict = new Set(wordDict);
+  // dp[0] = true;
+  
+  // for (let i = 1; i <= n; i++) {
+  //   for (let j = 0; j < i; j++) {
+  //     const word = s.substring(j, i);
+  //     if (dp[j] && dict.has(word)) {
+  //       dp[i] = true;
+  //     }
+  //   }
+  // }
+  // return dp[n];
+
+  // 当做背包问题求解
+  const sl = s.length;
+  const wl = wordDict.length;
+  const dp = new Array(sl+1).fill(false);
+  dp[0] = true;
+
+  for (let i = 1; i <= sl; i++) {
+    for (let j = 0; j < wl; j++) {
+      if (i >= wordDict[j].length) {
+        if (dp[i-wordDict[j].length] && s.slice(i-wordDict[j].length, i) === wordDict[j]) {
+          dp[i] = true;
+        }
+      }
+    }
+  }
+
+  return dp[sl];
 };
 // @lc code=end
 const s = "leetcode", wordDict = ["leet", "code"];

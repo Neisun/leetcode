@@ -113,41 +113,126 @@ var maxProfit = function(prices) {
    * We can do this!
    */
 
-  const len = prices.length;
-  const dp = [];
+  // const len = prices.length;
+  // const dp = [];
   
-  // construct dp
-  for (let i = 0; i < len; i++) {
-    dp[i] = [];
-    for (let j = 0; j < 5; j++) {
-      dp[i][j] = 0;
-    }
-  }
+  // // construct dp
+  // for (let i = 0; i < len; i++) {
+  //   dp[i] = [];
+  //   for (let j = 0; j < 5; j++) {
+  //     dp[i][j] = 0;
+  //   }
+  // }
 
-  // init
+  // // init
+  // dp[0][2] = -prices[0];
+  // dp[0][4] = -prices[0];
+
+
+  // // traverse
+  // for (let i = 1; i < len; i++) {
+  //   // state transition
+  //   // do nothing
+  //   dp[i][0] = dp[i-1][0];
+  //   // first time no stock
+  //   dp[i][1] = Math.max(dp[i-1][1], dp[i-1][2]+prices[i]);
+  //   // first time one stock
+  //   dp[i][2] = Math.max(dp[i-1][2], dp[i-1][0]-prices[i]);
+  //   // second time no stock
+  //   dp[i][3] = Math.max(dp[i-1][3], dp[i-1][4]+prices[i]);
+  //   // second time one stock
+  //   dp[i][4] = Math.max(dp[i-1][4], dp[i-1][1]-prices[i]);
+  // }
+
+  // // console.log(dp)
+
+  // // return result
+  // return dp[len-1][3];
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+   * 2024-07-08 再次复习
+   * 这是一道hard级别的题目，后来的结果依赖于之前的结果，即最优子结构问题
+   * 想到使用动态规划求解
+   * 最多可以交易两次
+   * 那么有几种状态？
+   * 不操作 dp[i][0]
+   * 第一次交易完-手里没票 dp[i][1]
+   * 第一次交易完-手里有票 dp[i][2]
+   * 第二次交易完-手里没票 dp[i][3]
+   * 第二次交易完-手里有票 dp[i][4]
+   * 
+   * 状态转移
+   * 1. 如果不操作
+   * dp[i][0] = dp[i-1][0]
+   * 2. 第一次交易完-手里没票
+   * dp[i][1] = max(dp[i-1][1], dp[i-1][2]+p[i])
+   * 3. 第一次交易完-手里有票
+   * dp[i][2] = max(dp[i-1][2], dp[i-1][0]-p[i])
+   * 4. 第二次交易完-手里没票
+   * dp[i][3] = max(dp[i-1][3], dp[i-1][2]+p[i])
+   * 5. 第二次交易完-手里有票
+   * dp[i][4] = max(dp[i-1][4], dp[i-1][1]-p[i]);
+   */
+
+  const n = prices.length;
+  const dp = new Array(n).fill().map(_ => new Array(4).fill(0));
+
+  dp[0][0] = 0;
   dp[0][2] = -prices[0];
   dp[0][4] = -prices[0];
 
-
-  // traverse
-  for (let i = 1; i < len; i++) {
-    // state transition
-    // do nothing
+  for (let i = 1; i < n; i++) {
+    // 不操作
     dp[i][0] = dp[i-1][0];
-    // first time no stock
+    // 第一次交易完-手里没票
     dp[i][1] = Math.max(dp[i-1][1], dp[i-1][2]+prices[i]);
-    // first time one stock
+    // 第一次交易完-手里有票
     dp[i][2] = Math.max(dp[i-1][2], dp[i-1][0]-prices[i]);
-    // second time no stock
+    // 第二次交易完-手里没票
     dp[i][3] = Math.max(dp[i-1][3], dp[i-1][4]+prices[i]);
-    // second time one stock
+    // 第二次交易完-手里有票
     dp[i][4] = Math.max(dp[i-1][4], dp[i-1][1]-prices[i]);
   }
 
-  // console.log(dp)
-
-  // return result
-  return dp[len-1][3];
+  return dp[n-1][3];
 };
 // @lc code=end
 
